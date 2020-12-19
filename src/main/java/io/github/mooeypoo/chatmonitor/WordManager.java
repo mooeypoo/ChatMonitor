@@ -51,6 +51,7 @@ public class WordManager {
 		String group = this.wordmap.get(matchedWord);
 		FileConfiguration config = this.configs.get(group).getConfig();
 		// From the group, get the message and commands
+
 		return new WordAction(
 			matchedWord,
 			config.getString("message"),

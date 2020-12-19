@@ -31,7 +31,6 @@ public class ChatMonitor extends JavaPlugin implements Listener {
     
     @Override
     public void onDisable() {
-        // TODO Insert logic to be performed when the plugin is disabled
 		getLogger().info("ChatMonitor is disabled.");
     }
     
@@ -50,11 +49,14 @@ public class ChatMonitor extends JavaPlugin implements Listener {
     		return;
     	}
 
+		String response = action.getMessage().replace("%player%", p.getName());
+		response = response.replace("%word%", action.getWord());
+
     	event.setCancelled(true);
-		p.sendMessage(ChatColor.RED + action.getMessage());
+		p.sendMessage(ChatColor.RED + response);
 		getLogger().warning(
 		"**SWEAR JAR ("+ action.getWord() +")** [GROUP: " + action.getGroup() + "] MESSAGE PREVENTED. \n" +
-				"-> MESSAGE SENT TO USER: " + action.getMessage() + "\n" +
+				"-> MESSAGE SENT TO USER: " + response + "\n" +
 				"-> ATTEMPTED USER MESSAGE: [" + p.getDisplayName() + "] " + msgFromPlayer
 		);
 		this.runCommands(p.getName(), action);
