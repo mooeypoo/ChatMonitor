@@ -7,11 +7,19 @@ public class WordAction {
 	private List<String> commands;
 	private String message;
 	private String group;
+	private Boolean preventSend;
 	
-	public WordAction(String word, String message, List<String> commands, String group) {
+	public WordAction(
+			String word,
+			String message,
+			Boolean preventSend,
+			List<String> commands,
+			String group
+	) {
 		this.word = word;
 		this.message = message;
 		this.commands = commands;
+		this.preventSend = preventSend;
 		this.group = group;
 	}
 	
@@ -29,6 +37,10 @@ public class WordAction {
 	
 	public String getGroup() {
 		return this.group;
+	}
+	
+	public Boolean isPreventSend() {
+		return this.preventSend;
 	}
 
 	public Boolean isEmpty() {

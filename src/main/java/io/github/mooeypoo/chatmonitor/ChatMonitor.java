@@ -1,5 +1,7 @@
 package io.github.mooeypoo.chatmonitor;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -51,14 +53,18 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 
 		String response = action.getMessage().replace("%player%", p.getName());
 		response = response.replace("%word%", action.getWord());
-
-    	event.setCancelled(true);
-		p.sendMessage(ChatColor.RED + response);
-		getLogger().warning(
-		"**SWEAR JAR ("+ action.getWord() +")** [GROUP: " + action.getGroup() + "] MESSAGE PREVENTED. \n" +
-				"-> MESSAGE SENT TO USER: " + response + "\n" +
-				"-> ATTEMPTED USER MESSAGE: [" + p.getDisplayName() + "] " + msgFromPlayer
-		);
+		ArrayList<String> logMessage = new ArrayList<String>();
+		logMessage.add("*WORD MATCH: "+ action.getWord() +"[type: " + action.getGroup() + "]*");
+		if (action.isPreventSend()) {
+	    	event.setCancelled(true);
+			logMessage.add("MESSAGE MUTED.");
+			logMessage.add("\n-> Attempted message: " + p.getName() + "> " + msgFromPlayer);
+		}
+		if (!response.isEmpty()) {
+			p.sendMessage(ChatColor.RED + response);
+			logMessage.add("\n-> Sent to user> " + response);
+		}
+		getLogger().warning(String.join(" ",logMessage));
 		this.runCommands(p.getName(), action);
     }
     

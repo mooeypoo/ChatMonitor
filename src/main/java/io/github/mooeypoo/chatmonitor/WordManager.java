@@ -55,6 +55,7 @@ public class WordManager {
 		return new WordAction(
 			matchedWord,
 			config.getString("message"),
+			config.getBoolean("preventsend"),
 			config.getStringList("runcommands"),
 			group
 		);
@@ -78,7 +79,7 @@ public class WordManager {
 			conf.saveConfig();
 			
 			// Collect all words from the config file
-			for (String word : conf.getConfig().getStringList("badwords")) {
+			for (String word : conf.getConfig().getStringList("words")) {
 				// Save in full list
 				this.allwords.add(word);
 				
