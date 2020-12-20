@@ -8,8 +8,9 @@ This plugin is considered "BETA" stage. It was not fully tested on large scale s
 ## Install
 
 * Download the [latest release of the plugin](https://github.com/mooeypoo/ChatMonitor/releases).
-* Create `ChatMonitor` folder in your plugins folder
-* Add your `config.yml` and `words_yourgroup.yml` to that folder.
+* Place the `.jar` file in your `/plugins` folder.
+
+After running the plugin for the first time, you can edit `config.yml` with your groups. The config files for the groups will be auto-generated for you the first time the plugin is reloaded with the group settings in the main config. You can then edit those to add the word list and specific properties below.
 
 Read below about the definition of the configuration files.
 
