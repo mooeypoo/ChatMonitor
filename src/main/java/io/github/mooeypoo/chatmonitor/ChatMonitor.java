@@ -1,6 +1,8 @@
 package io.github.mooeypoo.chatmonitor;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -132,7 +134,19 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 
     		// Log and execute:
     		getLogger().info("Invoking command: " + runnableCommand);
-    		getServer().getScheduler().callSyncMethod(this, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), runnableCommand));    		
+    		try {
+	    		getServer().getScheduler().callSyncMethod(this, new Callable<Boolean>() {
+	    			public Boolean call() {
+	        			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), runnableCommand);
+	        			return false;
+	    			}
+	    		}).get();
+    		} catch (ExecutionException e) {
+    			getLogger().warning("ExecutionException for command \"" + cmd + "\"");
+    		} catch (InterruptedException e) {
+    			getLogger().warning("InterruptedException for command \"" + cmd + "\"");
+    		}
+//    		getServer().getScheduler().callSyncMethod(this, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), runnableCommand));    		
     	}
     }
 }
