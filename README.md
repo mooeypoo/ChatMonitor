@@ -5,6 +5,14 @@ A plugin for minecraft server (bukkit) that monitors the chat and responds when 
 ## Stability
 This plugin is considered "BETA" stage. It was not fully tested on large scale servers with other plugins.
 
+## Install
+
+* Download the [latest release of the plugin](https://github.com/mooeypoo/ChatMonitor/releases).
+* Create `ChatMonitor` folder in your plugins folder
+* Add your `config.yml` and `words_yourgroup.yml` to that folder.
+
+Read below about the definition of the configuration files.
+
 ## Usage
 The plugin listens to text events in chat and commands and responds according to the given configuration. The outgoing chat is tested against the words that are provided in the configuration files, and if a match is found, the system will then respond based on the group's configuration.
 
