@@ -183,11 +183,11 @@ Note that the `minor` and `major` groups will not allow the message to be sent (
 
 The config files above would produce the following behaviors:
 
-| Player saying | Anyone else seeing this message | Result |
-| --- | --- |
-| Hey, I'd love to help with that! | Yes | Message appearing on the player's screen, and the player gets 4 gold ingots. |
-| Ooh, how old are you? | No | Message appearing on the player's screen. |
-| What a badword you are! | No | Message appearing on the player's screen. Player banned. |
+| Player says                      | Anyone sees the message? | Resulting action                                                             |
+|----------------------------------|--------------------------|------------------------------------------------------------------------------|
+| Hey, I'd love to help with that! | Yes                      | Message appearing on the player's screen, and the player gets 4 gold ingots. |
+| Ooh, how old are you?            | No                       | Message appearing on the player's screen.                                    |
+| What a badword you are!          | No                       | Message appearing on the player's screen. Player banned.                     |
 
 ## Author and Contribution
 
