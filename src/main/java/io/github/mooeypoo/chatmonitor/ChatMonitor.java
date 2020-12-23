@@ -101,8 +101,13 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 			shouldAllowEvent = false;
 		}
 		if (!response.isEmpty()) {
-			player.sendMessage(ChatColor.RED + response);
-			logMessage.add("\n-> Sent to user> " + response);
+			if (action.isBroadcast()) {
+				Bukkit.broadcastMessage(ChatColor.RED + response);
+				logMessage.add("\n-> Broadcast message> " + response);
+			} else {
+				player.sendMessage(ChatColor.RED + response);
+				logMessage.add("\n-> Sent to user> " + response);
+			}
 		}
 		getLogger().warning(String.join(" ",logMessage));
 		this.runCommands(player, action);

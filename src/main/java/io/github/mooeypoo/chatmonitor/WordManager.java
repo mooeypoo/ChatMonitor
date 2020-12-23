@@ -159,6 +159,7 @@ public class WordManager {
 			word,
 			config.getString("message"),
 			config.getBoolean("preventsend"),
+			config.getBoolean("broadcast"),
 			config.getStringList("runcommands"),
 			group
 		);

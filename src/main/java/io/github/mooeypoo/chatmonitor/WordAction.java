@@ -8,11 +8,13 @@ public class WordAction {
 	private String message;
 	private String group;
 	private Boolean preventSend;
+	private Boolean broadcast;
 	
 	public WordAction(
 			String word,
 			String message,
 			Boolean preventSend,
+			Boolean broadcast,
 			List<String> commands,
 			String group
 	) {
@@ -20,6 +22,7 @@ public class WordAction {
 		this.message = message;
 		this.commands = commands;
 		this.preventSend = preventSend;
+		this.broadcast = broadcast;
 		this.group = group;
 	}
 	
@@ -41,6 +44,10 @@ public class WordAction {
 	
 	public Boolean isPreventSend() {
 		return this.preventSend;
+	}
+	
+	public Boolean isBroadcast() {
+		return this.broadcast;
 	}
 
 	public Boolean isEmpty() {

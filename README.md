@@ -71,6 +71,15 @@ Example:
 preventsend: true
 ```
 
+##### broadcast (Boolean)
+Dictates whether to send the reply message to the entire chat. If set to true, the message is broadcasted as a general messsage to all players. If set to false, only the player who triggered this will receive the message, without anyone else seeing it.
+
+Example:
+
+```
+broadcast: true
+```
+
 ##### includecommands (Array)
 If given, these are commands that the plugin will also examine for matching words. By default, the system only looks at chat messages. Whatever list of command names given in this array will mean the system also looks at the text even if that command was issued -- and may prevent the processing of hte command if a word in the list is matched. A good example of this is the `tell` command; if that command is included in this array, the system will examine the "private" message text for matching words as well. Otherwise, it will not look at those at all. This field can also include commands form other plugins.
 
