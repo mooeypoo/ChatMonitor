@@ -198,11 +198,11 @@ Also, please note that the trigger word "!rules" must be surrounded with quotati
 
 The config files above would produce the following behaviors:
 
-| Player says                      | Anyone sees the message? | Resulting action                                                             |
+| Player says                      | Anyone sees the player's message? | Resulting action                                                             |
 |----------------------------------|--------------------------|------------------------------------------------------------------------------|
-| Hey, I'd love to help with that! | Yes                      | Message appearing on the player's screen, and the player gets 4 gold ingots. |
-| Ooh, how old are you?            | No                       | Message appearing on the player's screen.                                    |
-| What a badword you are!          | No                       | Message appearing on the player's screen. Player banned.                     |
+| !rules | Yes                     | Yes                      | Reply appearing to everyone.
+| Ooh, how old are you?            | No                       | Reply appearing on the player's screen.                                    |
+| What a badword you are!          | No                       | Reply appearing on the player's screen. Player banned.                     |
 
 ## Author and Contribution
 
