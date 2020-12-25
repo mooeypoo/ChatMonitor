@@ -127,7 +127,7 @@ public class ChatMonitor extends JavaPlugin implements Listener {
      * Based on the word that matched, see if the group requires followup actions
      * and trigger them on a deferred thread.
      *
-     * @param playerName The name of the player
+     * @param player The player that evoked the original word match
      * @param action The details of the matched word
      */
     private void runCommands(Player player, WordAction action) {
