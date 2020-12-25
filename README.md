@@ -1,3 +1,10 @@
+![GitHub last commit](https://img.shields.io/github/last-commit/mooeypoo/ChatMonitor)
+<span class="badge-buymeacoffee">
+<a href="https://ko-fi.com/mooeypoo" title="Donate to this project using Buy Me A Coffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg" alt="Buy Me A Coffee donate button" /></a>
+</span> 
+
+
+
 # Mincraft-ChatMonitor
 
 A plugin for minecraft server (Spigot) that monitors the chat and responds when text matches a list of words.
@@ -45,7 +52,7 @@ Example:
 groups:
   - minor
   - major
-  - thanks
+  - faq_rules
 ```
 
 #### Group configuration file
@@ -81,7 +88,7 @@ broadcast: true
 ```
 
 ##### includecommands (Array)
-If given, these are commands that the plugin will also examine for matching words. By default, the system only looks at chat messages. Whatever list of command names given in this array will mean the system also looks at the text even if that command was issued -- and may prevent the processing of hte command if a word in the list is matched. A good example of this is the `tell` command; if that command is included in this array, the system will examine the "private" message text for matching words as well. Otherwise, it will not look at those at all. This field can also include commands form other plugins.
+If given, these are commands that the plugin will also examine for matching words. By default, the system only looks at chat messages. Whatever list of command names given in this array will mean the system also looks at the text even if that command was issued -- and may prevent the processing of the command if a word in the list is matched. A good example of this is the `tell` command; if that command is included in this array, the system will examine the "private" message text for matching words as well. Otherwise, it will not look at those at all. This field can also include commands form other plugins.
 
 Example:
 
@@ -127,9 +134,9 @@ This plugin is fairly flexible and allows admins to use this for censoring bad s
 The example below sets up three groups:
 - "minor" group for minor curse words that will mute the message and remind the user they should read the rules.
 - "major" group for curse words and bad behavior that proceeds to run commands to ban the user
-- "thanks" group that congratulates users for being nice to each other.
+- "faq_rules" group that congratulates users for being nice to each other.
 
-Setting up the above would require one main configuration file (`config.yml`) and 3 sub-config files (`words_minor.yml`, `words_major.yml` and `words_thanks.yml`)
+Setting up the above would require one main configuration file (`config.yml`) and 3 sub-config files (`words_minor.yml`, `words_major.yml` and `words_faq_rules.yml`)
 
 ### Config files for the example
 
@@ -142,7 +149,7 @@ defaultmessage: Bad word intercepted (%word%). Please don't do that!
 groups:
 - minor
 - major
-- thanks
+- faq_rules
 ```
 
 **Minor group config** `words_minor.yml`
@@ -173,21 +180,19 @@ runcommands:
 - 'ban %player% Automatic ban: Use of forbidden word (%word%).'
 ```
 
-**Thanks group config** `words_thanks.yml`
+**faq_rules group config** `words_faq_rules.yml`
 
 ```
-message: Aww, thank you for being so friendly, %player%!
+message: "[INFO] You can see the rules of this server at http://example.com"
 preventsend: false
+broadcast: true
 words:
-- love to help
-- you're welcome
-- can help you
-- can help u
-runcommands:
-  - give %player% minecraft:gold_ingot 4
+- "!rules"
 ```
 
-Note that the `minor` and `major` groups will not allow the message to be sent (they both have `preventsend: true`) while the `thanks` group allows for the message to be sent, but also sends the user a message and gives the player an award.
+Note that the `minor` and `major` groups will not allow the message to be sent (they both have `preventsend: true`) while the `faq_rules` group not only allows for the message to be sent, but also sends the the preset message to the entire chat in a broadcast.
+
+Also, please note that the trigger word "!rules" must be surrounded with quotations marks because it starts with an exclamation point, similar to the message, which includes square brackets. Please see YAML specifications for more of these requirements.
 
 ### Behavior for the example
 
