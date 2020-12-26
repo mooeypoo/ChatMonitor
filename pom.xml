@@ -42,10 +42,17 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
+
 		<dependency>
 		    <groupId>org.yaml</groupId>
 		    <artifactId>snakeyaml</artifactId>
 		    <version>1.21</version>            
 		</dependency>
+		<dependency>
+		    <groupId>com.github.seeseemelk</groupId>
+		    <artifactId>MockBukkit-v1.16</artifactId>
+		    <version>0.5.0</version>
+		    <scope>test</scope>
+	    </dependency>
    </dependencies>
 </project>

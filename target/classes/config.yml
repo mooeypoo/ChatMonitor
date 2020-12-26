@@ -1,0 +1,3 @@
+defaultmessage: Bad word intercepted (%s). Message stopped.
+groups:
+   - list

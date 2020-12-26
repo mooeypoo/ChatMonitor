@@ -1,5 +1,6 @@
 package io.github.mooeypoo.chatmonitor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -7,6 +8,8 @@ import java.util.concurrent.ExecutionException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,6 +18,13 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class ChatMonitor extends JavaPlugin implements Listener {
 	private WordManager wordmanager; 
+
+	public ChatMonitor() {
+        super();
+    }
+	protected ChatMonitor(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
+        super(loader, description, dataFolder, file);
+    }
 
 	@Override
     public void onEnable() {
@@ -118,7 +128,6 @@ public class ChatMonitor extends JavaPlugin implements Listener {
      * Update the main config defaults.
      */
     public void updateDefaults() {
-    	getConfig().addDefault("defaultmessage", "Bad word intercepted (%s). Message stopped.");
         getConfig().options().copyDefaults();
         saveConfig();
     }
@@ -151,7 +160,6 @@ public class ChatMonitor extends JavaPlugin implements Listener {
     		} catch (InterruptedException e) {
     			getLogger().warning("InterruptedException for command \"" + cmd + "\"");
     		}
-//    		getServer().getScheduler().callSyncMethod(this, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), runnableCommand));    		
     	}
     }
 }

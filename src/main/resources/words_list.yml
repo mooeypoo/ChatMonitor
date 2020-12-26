@@ -1,0 +1,18 @@
+# Message sent as reply
+message: This message was not sent because it goes against the rules on this server. 
+
+# If set to true, the player's message will not be sent through to the chat
+preventsend: true
+
+# If set to true, the reply message will be sent to all chat. If set to false, only the player will get that message.
+broadcast: false
+
+# Commands to look for when searching for word matches
+incluecommands:
+- tell
+
+# List of words to trigger. These are regular expressions.
+words:
+- damn
+- crap
+- shit

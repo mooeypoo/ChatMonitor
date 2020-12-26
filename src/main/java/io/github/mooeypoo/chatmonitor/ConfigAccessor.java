@@ -21,7 +21,10 @@ package io.github.mooeypoo.chatmonitor;
 * SOFTWARE.
 */
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -44,7 +47,42 @@ public class ConfigAccessor {
         if (this.customConfigFile == null) {
             this.customConfigFile = new File(this.plugin.getDataFolder(), this.name);
         }
-        this.customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
+
+        if (!customConfigFile.exists()) {
+        	// Copy the resource from the internal jar, if it exists
+    		// This will copy the original with all comments
+    		if (!this.copyIntoFile(this.customConfigFile)) {
+        		// Just copy the values in and make a file
+        		plugin.saveResource(this.name, false);
+        		// Refresh the file object
+        		this.customConfigFile = new File(this.plugin.getDataFolder(), this.name);
+    		}
+        }
+
+        this.customConfig = YamlConfiguration.loadConfiguration(this.customConfigFile);
+
+    }
+    
+    private Boolean copyIntoFile(File outputFile) {
+    	try {
+    	    InputStream source = this.plugin.getResource(this.name);
+    	    if (source == null) {
+    	    	return false;
+    	    }
+
+    	    OutputStream target = new FileOutputStream(outputFile);
+    		this.plugin.getLogger().info("Initializing config from local resource '" + this.name + "'");
+    	    byte[] buffer = new byte[8 * 1024];
+    	    int bytesRead;
+    	    while ((bytesRead = source.read(buffer)) != -1) {
+    	    	target.write(buffer, 0, bytesRead);
+    	    }
+    	    target.close();
+    	    return true;
+    	} catch (IOException e) {
+    		this.plugin.getLogger().info("IOException for config '" + this.name + "'. Using default fallback.");
+    		return false;
+    	}
     }
 
     public FileConfiguration getConfig() {
