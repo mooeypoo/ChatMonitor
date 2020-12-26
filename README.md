@@ -1,5 +1,5 @@
-![GitHub last commit](https://img.shields.io/github/last-commit/mooeypoo/ChatMonitor) [![Maintainability](https://api.codeclimate.com/v1/badges/ba8dfbdc3905b70cbcb5/maintainability)](https://codeclimate.com/github/mooeypoo/ChatMonitor/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/ba8dfbdc3905b70cbcb5/test_coverage)](https://codeclimate.com/github/mooeypoo/ChatMonitor/test_coverage)
-[![Donate to the project!](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://ko-fi.com/mooeypoo)
+![GitHub last commit](https://img.shields.io/github/last-commit/mooeypoo/ChatMonitor) [![Maintainability](https://api.codeclimate.com/v1/badges/ba8dfbdc3905b70cbcb5/maintainability)](https://codeclimate.com/github/mooeypoo/ChatMonitor/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/ba8dfbdc3905b70cbcb5/test_coverage)](https://codeclimate.com/github/mooeypoo/ChatMonitor/test_coverage) 
+[![Donate to the project!](https://img.shields.io/badge/Buy%20me%20a%20coffee!-Donate-ff69b4?style=flat)](https://ko-fi.com/mooeypoo)
 
 
 
