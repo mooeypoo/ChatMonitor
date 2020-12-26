@@ -1,7 +1,4 @@
-![GitHub last commit](https://img.shields.io/github/last-commit/mooeypoo/ChatMonitor) [![Maintainability](https://api.codeclimate.com/v1/badges/ba8dfbdc3905b70cbcb5/maintainability)](https://codeclimate.com/github/mooeypoo/ChatMonitor/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/ba8dfbdc3905b70cbcb5/test_coverage)](https://codeclimate.com/github/mooeypoo/ChatMonitor/test_coverage) 
-[![Donate to the project!](https://img.shields.io/badge/Buy%20me%20a%20coffee!-Donate-ff69b4?style=flat)](https://ko-fi.com/mooeypoo)
-
-
+![GitHub last commit](https://img.shields.io/github/last-commit/mooeypoo/ChatMonitor) [![Maintainability](https://api.codeclimate.com/v1/badges/ba8dfbdc3905b70cbcb5/maintainability)](https://codeclimate.com/github/mooeypoo/ChatMonitor/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/ba8dfbdc3905b70cbcb5/test_coverage)](https://codeclimate.com/github/mooeypoo/ChatMonitor/test_coverage) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](code_of_conduct.md) [![Donate to the project!](https://img.shields.io/badge/Buy%20me%20a%20coffee!-Donate-ff69b4?style=flat)](https://ko-fi.com/mooeypoo)
 
 
 # Mincraft-ChatMonitor
@@ -128,80 +125,8 @@ runcommands:
 * `%word%` will be replaced by the word in the word list that matched the rule in the group.
 
 ## Example
-This plugin is fairly flexible and allows admins to use this for censoring bad speech, reminding the users of behavior rules, or congratulating users for good behavior. Admins can create different groups that trigger different behaviors. 
 
-The example below sets up three groups:
-- "minor" group for minor curse words that will mute the message and remind the user they should read the rules.
-- "major" group for curse words and bad behavior that proceeds to run commands to ban the user
-- "faq_rules" group that congratulates users for being nice to each other.
-
-Setting up the above would require one main configuration file (`config.yml`) and 3 sub-config files (`words_minor.yml`, `words_major.yml` and `words_faq_rules.yml`)
-
-### Config files for the example
-
-Here are the configuration files that would work with this example:
-
-**Main config** `config.yml`
-
-```
-defaultmessage: Bad word intercepted (%word%). Please don't do that!
-groups:
-- minor
-- major
-- faq_rules
-```
-
-**Minor group config** `words_minor.yml`
-
-```
-message: This message was not sent because it goes against our rules about age talk
-  on this server. Please refer to the rules of the server on Discord.
-preventsend: true
-incluecommands:
-- tell
-words:
-- how old are you
-- your age
-- my age
-```
-
-**Major group config** `words_major.yml`
-
-```
-message: We don't allow this word (%word%) on this server. Your message was not sent.
-preventsend: true
-incluecommands:
-- tell
-words:
-- badword
-- worseword
-runcommands:
-- 'ban %player% Automatic ban: Use of forbidden word (%word%).'
-```
-
-**faq_rules group config** `words_faq_rules.yml`
-
-```
-message: "[INFO] You can see the rules of this server at http://example.com"
-preventsend: false
-broadcast: true
-words:
-- "!rules"
-```
-
-Note that the `minor` and `major` groups will not allow the message to be sent (they both have `preventsend: true`) while the `faq_rules` group not only allows for the message to be sent, but also sends the the preset message to the entire chat in a broadcast.
-
-Also, please note that the trigger word "!rules" must be surrounded with quotations marks because it starts with an exclamation point, similar to the message, which includes square brackets. Please see YAML specifications for more of these requirements.
-
-### Behavior for the example
-
-The config files above would produce the following behaviors:
-
-| Player says                      | Anyone sees the player's message? | Resulting action                                         |
-| -------------------------------- | --------------------------------- | -------------------------------------------------------- |
-| `!rules`                           | Yes                               | Reply appearing to everyone.                             |
-| `Ooh, how old are you?`            | No                                | Reply appearing on the player's screen.                  |
-| `What a badword you are!`          | No                                | Reply appearing on the player's screen. Player banned.   |
+See the [Configuration example](https://github.com/mooeypoo/ChatMonitor/wiki/Configuration-example) for some use cases.
 
 ## Author and Contribution
 
