@@ -49,29 +49,22 @@ public class ConfigAccessor {
         }
 
         if (!customConfigFile.exists()) {
-        	// Copy the resource from the internal jar, if it exists
-    		// This will copy the original with all comments
-    		if (!this.copyIntoFile(this.customConfigFile)) {
-        		// Just copy the values in and make a file
-        		plugin.saveResource(this.name, false);
-        		// Refresh the file object
-        		this.customConfigFile = new File(this.plugin.getDataFolder(), this.name);
-    		}
+        	// Copy the defaults from the internal file default_words_config.yml
+        	this.copyIntoFile(this.customConfigFile);
         }
 
         this.customConfig = YamlConfiguration.loadConfiguration(this.customConfigFile);
-
     }
     
     private Boolean copyIntoFile(File outputFile) {
     	try {
-    	    InputStream source = this.plugin.getResource(this.name);
+    	    InputStream source = this.plugin.getResource("default_words_config.yml");
     	    if (source == null) {
     	    	return false;
     	    }
 
     	    OutputStream target = new FileOutputStream(outputFile);
-    		this.plugin.getLogger().info("Initializing config from local resource '" + this.name + "'");
+    		this.plugin.getLogger().info("Initializing config from local resource 'default_words_config.yml' into '" + this.name + "'");
     	    byte[] buffer = new byte[8 * 1024];
     	    int bytesRead;
     	    while ((bytesRead = source.read(buffer)) != -1) {

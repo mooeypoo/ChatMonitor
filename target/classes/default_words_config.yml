@@ -13,6 +13,5 @@ incluecommands:
 
 # List of words to trigger. These are regular expressions.
 words:
-- damn
-- crap
-- shit
+- foobar
+- badword
