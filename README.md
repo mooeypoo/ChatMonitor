@@ -1,12 +1,6 @@
-![GitHub last commit](https://img.shields.io/github/last-commit/mooeypoo/ChatMonitor)
+![GitHub last commit](https://img.shields.io/github/last-commit/mooeypoo/ChatMonitor) [![Maintainability](https://api.codeclimate.com/v1/badges/ba8dfbdc3905b70cbcb5/maintainability)](https://codeclimate.com/github/mooeypoo/ChatMonitor/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/ba8dfbdc3905b70cbcb5/test_coverage)](https://codeclimate.com/github/mooeypoo/ChatMonitor/test_coverage)
+[![Donate to the project!](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://ko-fi.com/mooeypoo)
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/ba8dfbdc3905b70cbcb5/maintainability)](https://codeclimate.com/github/mooeypoo/ChatMonitor/maintainability)
-
-[![Test Coverage](https://api.codeclimate.com/v1/badges/ba8dfbdc3905b70cbcb5/test_coverage)](https://codeclimate.com/github/mooeypoo/ChatMonitor/test_coverage)
-
-<span class="badge-buymeacoffee">
-<a href="https://ko-fi.com/mooeypoo" title="Donate to this project using Buy Me A Coffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg" alt="Buy Me A Coffee donate button" /></a>
-</span> 
 
 
 
