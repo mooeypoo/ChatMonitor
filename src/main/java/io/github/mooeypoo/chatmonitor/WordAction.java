@@ -3,7 +3,8 @@ package io.github.mooeypoo.chatmonitor;
 import java.util.List;
 
 public class WordAction {
-	private String word;
+	private String matchedRule;
+	private String originalWord;
 	private List<String> commands;
 	private String message;
 	private String group;
@@ -11,14 +12,16 @@ public class WordAction {
 	private Boolean broadcast;
 	
 	public WordAction(
-			String word,
+			String matchedRule,
+			String originalWord,
 			String message,
 			Boolean preventSend,
 			Boolean broadcast,
 			List<String> commands,
 			String group
 	) {
-		this.word = word;
+		this.matchedRule = matchedRule;
+		this.originalWord = originalWord;
 		this.message = message;
 		this.commands = commands;
 		this.preventSend = preventSend;
@@ -26,8 +29,12 @@ public class WordAction {
 		this.group = group;
 	}
 	
-	public String getWord() {
-		return this.word;
+	public String getMatchedRule() {
+		return this.matchedRule;
+	}
+	
+	public String getOriginalWord() {
+		return this.originalWord;
 	}
 	
 	public String getMessage() {
@@ -51,6 +58,6 @@ public class WordAction {
 	}
 
 	public Boolean isEmpty() {
-		return this.word == null;
+		return this.matchedRule == null;
 	}
 }

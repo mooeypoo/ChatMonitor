@@ -122,7 +122,8 @@ runcommands:
 **NOTE:** All messages and commands can have three message-parameters that are then internally replaced within the system:
 
 * `%player%` will be replaced by the name of the player that triggered the chat message or command.
-* `%word%` will be replaced by the word in the word list that matched the rule in the group.
+* `%word%` will be replaced by the word from the player's message that matched the rule
+* `%matchrule%` will be replaced by the match rule from the group config that matched the word given by the user
 
 ## Example
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -55,13 +56,13 @@ public class WordManager {
 	 * @return Details of the matched word from any of the groups, or null if none was matched.
 	 */
 	public WordAction processAllWords(String chatMessage) {
-		String matchedWord = this.getMatchedWord(chatMessage, this.allwords);
+		String[] matched = this.getMatchedWord(chatMessage, this.allwords);
 
-		if (matchedWord == null) {
+		if (matched == null) {
 			return null;
 		}
 		
-		return this.getWordAction(matchedWord);
+		return this.getWordAction(matched);
 	}
 
 	/**
@@ -75,12 +76,12 @@ public class WordManager {
 	public WordAction processWordsInCommand(String commandName, String fullmessage) {
 		ArrayList<String> wordListForThisCommand = this.mapWordsInCommands.get(commandName);
 
-		String matchedWord = this.getMatchedWord(fullmessage, wordListForThisCommand);
-		if (matchedWord == null) {
+		String[] matched = this.getMatchedWord(fullmessage, wordListForThisCommand);
+		if (matched == null) {
 			return null;
 		}
 
-		return this.getWordAction(matchedWord);
+		return this.getWordAction(matched);
 	}
 	
 	/**
@@ -139,12 +140,14 @@ public class WordManager {
 	 * Produce a WordAction type response from a given word,
 	 * based on details of its group and individual config.
 	 *
-	 * @param word Given matching word
+	 * @param matched An array 
 	 * @return     Details about the matched word 
 	 */
-	private WordAction getWordAction(String word) {
+	private WordAction getWordAction(String[] matched) {
+		String matchedRule = matched[0];
+		String originalWord = matched[1];
 		// Find the group this word is in
-		String group = this.wordmap.get(word);
+		String group = this.wordmap.get(matchedRule);
 		if (group == null) {
 			return null;
 		}
@@ -156,7 +159,8 @@ public class WordManager {
 
 		// From the group, get the message and commands
 		return new WordAction(
-			word,
+			matchedRule,
+			originalWord,
 			config.getString("message"),
 			config.getBoolean("preventsend"),
 			config.getBoolean("broadcast"),
@@ -170,22 +174,31 @@ public class WordManager {
 	 * Check whether the test string has any matches from the given word list
 	 * and return the matching word.
 	 *
-	 * @param testString Given string
+	 * @param givenString Given string
 	 * @param wordList A word list to test against
-	 * @return Matching word, or null if none was matched.
+	 * @return An array that contains the matching term and original word that was matched,
+	 *  or null if none was matched.
 	 */
-	private String getMatchedWord(String testString, List<String> wordList) {
+	private String[] getMatchedWord(String givenString, List<String> wordList) {
     	Matcher matcher;
 		if (wordList == null || wordList.isEmpty()) {
 			return null;
 		}
+		
+		// Transform to owercase for the match test
+		String testString = givenString.toLowerCase();
     	// Check if the string has any of the words in the wordlist
-		for (String word : wordList) {
-    		Pattern pattern = Pattern.compile(word);
-    		matcher = pattern.matcher(testString);
-    		if (matcher.find()) {
-    			return word;
-    		}
+		for (String rule : wordList) {
+			try {
+	    		Pattern pattern = Pattern.compile(rule);
+	    		matcher = pattern.matcher(testString);
+	    		if (matcher.find()) {
+	    			return new String[] { rule, matcher.group() };
+	    		}
+			} catch (PatternSyntaxException e) {
+				this.plugin.getLogger().info("Error: Could not process rule (" + rule + ")");
+				return null;
+			}
 		}
 		
 		return null;
