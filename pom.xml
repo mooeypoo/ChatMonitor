@@ -39,7 +39,28 @@
 	          </descriptorRefs>
 	        </configuration>
         </plugin>
+		<plugin>
+	        <groupId>org.jacoco</groupId>
+	        <artifactId>jacoco-maven-plugin</artifactId>
+	        <version>0.8.2</version>
+	        <executions>
+	            <execution>
+	                <goals>
+	                    <goal>prepare-agent</goal>
+	                </goals>
+	            </execution>
+	            <!-- attached to Maven test phase -->
+	            <execution>
+	                <id>report</id>
+	                <phase>test</phase>
+	                <goals>
+	                    <goal>report</goal>
+	                </goals>
+	            </execution>
+	        </executions>
+	    </plugin>
       </plugins>
+
    </build>
 
    <repositories>
@@ -70,6 +91,15 @@
 			<version>1.26</version>
 			<scope>provided</scope> <!-- Prevents it from being shaded -->
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/net.sourceforge.cobertura/cobertura -->
+		<!-- dependency>
+		    <groupId>net.sourceforge.cobertura</groupId>
+		    <artifactId>cobertura</artifactId>
+		    <version>2.1.1</version>
+		    <scope>test</scope>
+		</dependency -->
+
 		<dependency>
 		    <groupId>com.github.seeseemelk</groupId>
 		    <artifactId>MockBukkit-v1.16</artifactId>
