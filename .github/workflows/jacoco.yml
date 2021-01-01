@@ -30,5 +30,5 @@ jobs:
           JACOCO_SOURCE_PATH: "${{github.workspace}}/src/main/java"
         with:
           # The report file must be there, otherwise Code Climate won't find it
-          coverageCommand: mvn clean jacoco:prepare-agent install jacoco:report
+          coverageCommand: mvn clean jacoco:prepare-agent install jacoco:report --file pom.xml
           coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
