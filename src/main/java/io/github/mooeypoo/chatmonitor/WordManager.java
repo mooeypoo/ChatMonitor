@@ -1,10 +1,12 @@
 package io.github.mooeypoo.chatmonitor;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -18,13 +20,21 @@ public class WordManager {
 	private ArrayList<String> relevantCommands = new ArrayList<String>();
 	private JavaPlugin plugin;
 	private ConfigManager configManager;
+	private Logger logger;
 	
 	public WordManager(JavaPlugin plugin) {
 		this.plugin = plugin;
+		this.logger = this.plugin.getLogger();
 		this.configManager = new ConfigManager(Paths.get(this.plugin.getDataFolder().getPath()), "ChatMonitor_wordgroup");
 		this.collectWords();
 	}
 	
+	// Used for testing
+	public WordManager(Logger logger, Path filepath, String prefix) {
+		this.logger = logger;
+		this.configManager = new ConfigManager(filepath, prefix);
+		this.collectWords();
+	}
 	/**
 	 * Reload the lists and re-process the groups from the config files.
 	 */
@@ -183,7 +193,7 @@ public class WordManager {
 	    			return new String[] { rule, matcher.group() };
 	    		}
 			} catch (PatternSyntaxException e) {
-				this.plugin.getLogger().info("Error: Could not process rule (" + rule + ")");
+				this.logger.info("Error: Could not process rule (" + rule + ")");
 				return null;
 			}
 		}

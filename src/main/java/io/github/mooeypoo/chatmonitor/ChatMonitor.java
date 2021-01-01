@@ -30,24 +30,20 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 
 	@Override
 	public void onEnable() {
-		// Get config
-//		saveDefaultConfig();
-//		updateDefaults();
-
-		// Initialize word list
-		getLogger().info("Initializing word lists...");
+		// Initialize word list and config
+		this.getLogger().info("Initializing word lists...");
 		this.wordmanager = new WordManager(this);
 
 		// Connect events
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(this, (this));
-		// TODO Insert logic to be performed when the plugin is enabled
-		getLogger().info("ChatMonitor is enabled.");
+
+		this.getLogger().info("ChatMonitor is enabled.");
 	}
 
 	@Override
 	public void onDisable() {
-		getLogger().info("ChatMonitor is disabled.");
+		this.getLogger().info("ChatMonitor is disabled.");
 	}
 
 	@EventHandler
@@ -123,7 +119,7 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 				logMessage.add("\n-> Sent to user> " + response);
 			}
 		}
-		getLogger().warning(String.join(" ", logMessage));
+		this.getLogger().warning(String.join(" ", logMessage));
 		this.runCommands(player, action);
 		return shouldAllowEvent;
 	}
@@ -153,7 +149,7 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 			final String runnableCommand = replacedCommand;
 
 			// Log and execute:
-			getLogger().info("Invoking command: " + runnableCommand);
+			this.getLogger().info("Invoking command: " + runnableCommand);
 			try {
 				getServer().getScheduler().callSyncMethod(this, new Callable<Boolean>() {
 					public Boolean call() {
@@ -162,9 +158,9 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 					}
 				}).get();
 			} catch (ExecutionException e) {
-				getLogger().warning("ExecutionException for command \"" + cmd + "\"");
+				this.getLogger().warning("ExecutionException for command \"" + cmd + "\"");
 			} catch (InterruptedException e) {
-				getLogger().warning("InterruptedException for command \"" + cmd + "\"");
+				this.getLogger().warning("InterruptedException for command \"" + cmd + "\"");
 			}
 		}
 	}
