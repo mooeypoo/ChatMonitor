@@ -31,4 +31,4 @@ steps:
     with:
       # The report file must be there, otherwise Code Climate won't find it
       coverageCommand: mvn clean jacoco:prepare-agent install jacoco:report
-      coverageLocations: ${{github.workspace}}/target/site/jacoco/jacoco.xml:jacoco
+      coverageLocations: ${{github.workspace}}/site/jacoco/jacoco.xml:jacoco
