@@ -199,7 +199,6 @@ public class WordManager {
 		}
 		
 		return null;
-		
 	}
 	
 	/**

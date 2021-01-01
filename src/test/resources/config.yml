@@ -1,0 +1,5 @@
+ # A list of word-groups to use. Each group requires a separate config file; the config files will be auto-generated on first-run of this list if they don't already exist, and can be then edited to add specific behavior and a list of match words.
+groups:
+  -  'test_validwords'
+ # Default message to display to the user (or broadcast in general chat) if a word in any of the group lists matches user text. This message will be used if any of the groups uses an empty message.
+defaultmessage: 'This word ("%word%") is not allowed on this server.'
