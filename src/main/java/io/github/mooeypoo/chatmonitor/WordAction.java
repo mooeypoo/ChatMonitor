@@ -1,11 +1,11 @@
 package io.github.mooeypoo.chatmonitor;
 
-import java.util.List;
+import java.util.Set;
 
 public class WordAction {
 	private String matchedRule;
 	private String originalWord;
-	private List<String> commands;
+	private Set<String> commands;
 	private String message;
 	private String group;
 	private Boolean preventSend;
@@ -17,7 +17,7 @@ public class WordAction {
 			String message,
 			Boolean preventSend,
 			Boolean broadcast,
-			List<String> commands,
+			Set<String> commands,
 			String group
 	) {
 		this.matchedRule = matchedRule;
@@ -41,7 +41,7 @@ public class WordAction {
 		return this.message;
 	}
 
-	public List<String> getCommands() {
+	public Set<String> getCommands() {
 		return this.commands;
 	}
 	

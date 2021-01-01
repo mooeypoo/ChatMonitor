@@ -23,6 +23,22 @@
 		            <target>1.8</target>
 		        </configuration>
           </plugin>
+	  	  <plugin>
+	        <artifactId>maven-assembly-plugin</artifactId>
+	        <executions>
+	          <execution>
+	            <phase>package</phase>
+	            <goals>
+	              <goal>single</goal>
+	            </goals>
+	          </execution>
+	        </executions>
+	        <configuration>
+	          <descriptorRefs>
+	            <descriptorRef>jar-with-dependencies</descriptorRef>
+	          </descriptorRefs>
+	        </configuration>
+        </plugin>
       </plugins>
    </build>
 
@@ -42,11 +58,17 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
+		<dependency>
+			<groupId>space.arim.dazzleconf</groupId>
+			<artifactId>dazzleconf-ext-snakeyaml</artifactId>
+			<version>1.1.0</version>
+		</dependency>
 
 		<dependency>
-		    <groupId>org.yaml</groupId>
-		    <artifactId>snakeyaml</artifactId>
-		    <version>1.21</version>            
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.26</version>
+			<scope>provided</scope> <!-- Prevents it from being shaded -->
 		</dependency>
 		<dependency>
 		    <groupId>com.github.seeseemelk</groupId>

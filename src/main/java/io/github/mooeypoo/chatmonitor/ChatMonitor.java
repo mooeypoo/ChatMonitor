@@ -31,12 +31,12 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 	@Override
 	public void onEnable() {
 		// Get config
-		saveDefaultConfig();
-		updateDefaults();
+//		saveDefaultConfig();
+//		updateDefaults();
 
 		// Initialize word list
 		getLogger().info("Initializing word lists...");
-		this.wordmanager = new WordManager(this, getConfig());
+		this.wordmanager = new WordManager(this);
 
 		// Connect events
 		PluginManager pm = this.getServer().getPluginManager();

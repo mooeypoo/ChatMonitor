@@ -1,31 +1,27 @@
 package io.github.mooeypoo.chatmonitor;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class WordManager {
-	private HashMap<String, ConfigAccessor> configs = new HashMap<String, ConfigAccessor>();
 	private HashMap<String, String> wordmap = new HashMap<String, String>();
 	private HashMap<String, ArrayList<String>> mapWordsInCommands = new HashMap<String, ArrayList<String>>();
 	private ArrayList<String> allwords = new ArrayList<String>();
 	private ArrayList<String> relevantCommands = new ArrayList<String>();
-	private Configuration mainConfig;
-	private String defaultMessage;
 	private JavaPlugin plugin;
+	private ConfigManager configManager;
 	
-	public WordManager(JavaPlugin plugin, Configuration mainConfig) {
+	public WordManager(JavaPlugin plugin) {
 		this.plugin = plugin;
-		this.mainConfig = mainConfig;
-		this.defaultMessage = this.mainConfig.getString("defaultmessage");
+		this.configManager = new ConfigManager(Paths.get(this.plugin.getDataFolder().getPath()), "ChatMonitor_wordgroup");
 		this.collectWords();
 	}
 	
@@ -33,17 +29,15 @@ public class WordManager {
 	 * Reload the lists and re-process the groups from the config files.
 	 */
 	public void reload() {
-		// Refresh all configs 
-		for (Map.Entry<String, ConfigAccessor> entry : this.configs.entrySet()) {
-			entry.getValue().reloadConfig();
-		}
-		
 		// Reset lists
 		this.wordmap.clear();
 		this.allwords.clear();
 		this.mapWordsInCommands.clear();
 		this.relevantCommands.clear();
 		
+		// Refresh all configs 
+		this.configManager.reload();
+
 		// Redo word collection
 		this.collectWords();
 	}
@@ -89,32 +83,21 @@ public class WordManager {
 	 */
 	private void collectWords() {
 		// Go over the groups of words
-		List<String> groups = this.mainConfig.getStringList("groups");
-		if (groups == null) {
-			this.plugin.getLogger().warning("Could not find word groups in configuration.");
-			return;
-		}
-		for (String group : groups) {
-			// Create config
-			this.plugin.getLogger().info("Adding group config: " + group);
-			ConfigAccessor conf = new ConfigAccessor(this.plugin, group, "words");
-			this.configs.put(group, new ConfigAccessor(this.plugin, group, "words"));
-			
-			// Save config and defaults
-			conf.getConfig().addDefault("mesage", this.defaultMessage);
-			conf.saveConfig();
-			
-			// Collect all words from the config file
-			for (String word : conf.getConfig().getStringList("words")) {
+		Set<String> groups = this.configManager.getGroupNames();
+
+		for (String groupName : groups) {
+			GroupConfigInterface groupConfig = this.configManager.getGroupConfigData(groupName);
+			// Collect all words from the config group
+			for (String word : groupConfig.words()) {
 				// Save in full list
 				this.allwords.add(word);
 				
 				// Save in the word map so we can find the group from the matched word
-				this.wordmap.put(word, group);
+				this.wordmap.put(word, groupName);
 				
 				// Check if there are commands that this word should be tested against
 				// and add those to the commands map
-				List<String> includedCommands = conf.getConfig().getStringList("incluecommands");
+				Set<String> includedCommands = groupConfig.includeCommands();
 				if (!includedCommands.isEmpty()) {
 					for (String includedCmd : includedCommands) {
 						ArrayList<String> listForThisCommand = this.mapWordsInCommands.get(includedCmd);
@@ -132,8 +115,8 @@ public class WordManager {
 					}
 				}
 			}
+	
 		}
-		
 	}
 
 	/**
@@ -144,6 +127,9 @@ public class WordManager {
 	 * @return     Details about the matched word 
 	 */
 	private WordAction getWordAction(String[] matched) {
+		if (matched.length < 2) {
+			return null;
+		}
 		String matchedRule = matched[0];
 		String originalWord = matched[1];
 		// Find the group this word is in
@@ -151,7 +137,8 @@ public class WordManager {
 		if (group == null) {
 			return null;
 		}
-		FileConfiguration config = this.configs.get(group).getConfig();
+		GroupConfigInterface config = this.configManager.getGroupConfigData(group);
+//				configs.get(group).getConfig();
 		
 		if (config == null) {
 			return null;
@@ -161,10 +148,10 @@ public class WordManager {
 		return new WordAction(
 			matchedRule,
 			originalWord,
-			config.getString("message"),
-			config.getBoolean("preventsend"),
-			config.getBoolean("broadcast"),
-			config.getStringList("runcommands"),
+			config.message(),
+			config.preventSend(),
+			config.broadcast(),
+			config.runCommands(),
 			group
 		);
 		
