@@ -22,6 +22,10 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Clone the repo
+        uses: actions/checkout@v2
+        with:
+          path: main
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v2.7.5
         env:
