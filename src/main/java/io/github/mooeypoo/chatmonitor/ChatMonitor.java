@@ -55,9 +55,15 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 		}
 
 		String msgFromPlayer = event.getMessage();
-		WordAction action = this.wordmanager.processAllWords(msgFromPlayer);
+		WordAction action = null;
+		try {
+			action = this.wordmanager.processAllWords(msgFromPlayer);
+		} catch (Exception e) {
+			this.getLogger().info(e.getMessage());
+			return;
+		}
 
-		if (!this.processResponse(action, p, msgFromPlayer)) {
+		if (action != null && !this.processResponse(action, p, msgFromPlayer)) {
 			event.setCancelled(true);
 		}
 	}
@@ -76,9 +82,15 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 			return;
 		}
 
-		WordAction action = this.wordmanager.processWordsInCommand(cmdName, event.getMessage());
+		WordAction action = null;
+		try {
+			action = this.wordmanager.processWordsInCommand(cmdName, event.getMessage());
+		} catch (Exception e) {
+			this.getLogger().info(e.getMessage());
+			return;
+		}
 
-		if (!this.processResponse(action, event.getPlayer(), event.getMessage())) {
+		if (action != null && !this.processResponse(action, event.getPlayer(), event.getMessage())) {
 			event.setCancelled(true);
 		}
 	}

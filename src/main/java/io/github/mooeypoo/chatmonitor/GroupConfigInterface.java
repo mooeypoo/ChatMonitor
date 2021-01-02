@@ -49,12 +49,12 @@ public interface GroupConfigInterface {
 
 	@ConfKey("words")
 	@ConfComments("A list of words to trigger the behavior of this group. This is a regular expression list. If words are added plainly, they will match anywhere in the string. Example: 'foo' will match 'food' and 'blafoo'. For comlpex behavior, like limiting word boundaries and alternative spellings, see regular expression documentation, and visit the ChatMonitor wiki for example lists.")
-	@DefaultStrings({"badw0rd"})
+	@DefaultStrings({})
 	Set<String> words();
 
 	@ConfKey("runcommands")
 	@ConfComments("A list of raw commands to execute after a word is matched.")
-	@DefaultStrings({""})
+	@DefaultStrings({})
 	Set<String> runCommands();
 }
 

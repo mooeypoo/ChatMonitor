@@ -20,18 +20,15 @@ public class WordManager {
 	private ArrayList<String> relevantCommands = new ArrayList<String>();
 	private JavaPlugin plugin;
 	private ConfigManager configManager;
-	private Logger logger;
 	
 	public WordManager(JavaPlugin plugin) {
 		this.plugin = plugin;
-		this.logger = this.plugin.getLogger();
 		this.configManager = new ConfigManager(Paths.get(this.plugin.getDataFolder().getPath()), "ChatMonitor_wordgroup");
 		this.collectWords();
 	}
 	
 	// Used for testing
-	public WordManager(Logger logger, Path filepath, String prefix) {
-		this.logger = logger;
+	public WordManager(Path filepath, String prefix) {
 		this.configManager = new ConfigManager(filepath, prefix);
 		this.collectWords();
 	}
@@ -58,8 +55,9 @@ public class WordManager {
 	 *
 	 * @param chatMessage Given message
 	 * @return Details of the matched word from any of the groups, or null if none was matched.
+	 * @throws Exception 
 	 */
-	public WordAction processAllWords(String chatMessage) {
+	public WordAction processAllWords(String chatMessage) throws Exception {
 		String[] matched = this.getMatchedWord(chatMessage, this.allwords);
 
 		if (matched == null) {
@@ -76,10 +74,15 @@ public class WordManager {
 	 * @param commandName The name of the command
 	 * @param fullmessage Given message
 	 * @return Details of the matched word from any of the groups, or null if none was matched.
+	 * @throws Exception 
 	 */
-	public WordAction processWordsInCommand(String commandName, String fullmessage) {
-		ArrayList<String> wordListForThisCommand = this.mapWordsInCommands.get(commandName);
+	public WordAction processWordsInCommand(String commandName, String fullmessage) throws Exception {
+		if (!this.mapWordsInCommands.containsKey(commandName)) {	
+			return null;
+		}
 
+		ArrayList<String> wordListForThisCommand = this.mapWordsInCommands.get(commandName);
+		
 		String[] matched = this.getMatchedWord(fullmessage, wordListForThisCommand);
 		if (matched == null) {
 			return null;
@@ -148,7 +151,6 @@ public class WordManager {
 			return null;
 		}
 		GroupConfigInterface config = this.configManager.getGroupConfigData(group);
-//				configs.get(group).getConfig();
 		
 		if (config == null) {
 			return null;
@@ -175,8 +177,9 @@ public class WordManager {
 	 * @param wordList A word list to test against
 	 * @return An array that contains the matching term and original word that was matched,
 	 *  or null if none was matched.
+	 * @throws Exception 
 	 */
-	private String[] getMatchedWord(String givenString, List<String> wordList) {
+	private String[] getMatchedWord(String givenString, List<String> wordList) throws Exception {
     	Matcher matcher;
 		if (wordList == null || wordList.isEmpty()) {
 			return null;
@@ -193,8 +196,7 @@ public class WordManager {
 	    			return new String[] { rule, matcher.group() };
 	    		}
 			} catch (PatternSyntaxException e) {
-				this.logger.info("Error: Could not process rule (" + rule + ")");
-				return null;
+				throw new Exception("Error: Could not process rule (" + rule + ")");
 			}
 		}
 		

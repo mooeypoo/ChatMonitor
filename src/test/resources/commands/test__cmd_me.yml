@@ -10,13 +10,11 @@ message: 'This word ("%word%") is not allowed on this server.'
 broadcast: false
  # A list of words to trigger the behavior of this group. This is a regular expression list. If words are added plainly, they will match anywhere in the string. Example: 'foo' will match 'food' and 'blafoo'. For comlpex behavior, like limiting word boundaries and alternative spellings, see regular expression documentation, and visit the ChatMonitor wiki for example lists.
 words:
-  - 'badw[0o]rd'
-  - '\bw0rd\b'
- # A list of raw commands to execute after a word is matched.
-runcommands:
-  -  ''
+  -  '\bjustme\b'
  # A list of commands the plugin should look into when searching for word matches. Do not include the slash (Example: - tell)
 includecommands:
-  -  'tell'
+  -  'me'
+ # A list of raw commands to execute after a word is matched.
+runcommands:
  # Stop the user message from appearing in the main chat if there was a word match.
 preventsend: false
