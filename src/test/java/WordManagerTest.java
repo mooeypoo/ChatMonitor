@@ -2,6 +2,8 @@ import static org.junit.Assert.*;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
+
 import static java.util.Arrays.asList;
 
 import org.junit.After;
@@ -96,8 +98,13 @@ public class WordManagerTest {
 		action = wordManager.processWordsInCommand("tell", "the word justme should NOT match for that command");
 		assertNull(action);
 		
-		assertEquals(wordManager.getRelevantCommands(), asList("me", "tell"));
-}
+		// Check that wordManager.getRelevantCommands() has all commands that have words in them
+		List<String> expectedRelevantCommands = asList("me", "tell");
+		assertTrue(
+			wordManager.getRelevantCommands().containsAll(expectedRelevantCommands) &&
+			expectedRelevantCommands.containsAll(wordManager.getRelevantCommands())
+		);
+	}
 
 }
 

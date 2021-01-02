@@ -101,35 +101,45 @@ public class WordManager {
 		for (String groupName : groups) {
 			GroupConfigInterface groupConfig = this.configManager.getGroupConfigData(groupName);
 			// Collect all words from the config group
+			this.allwords.addAll(groupConfig.words());
+
 			for (String word : groupConfig.words()) {
-				// Save in full list
-				this.allwords.add(word);
-				
 				// Save in the word map so we can find the group from the matched word
 				this.wordmap.put(word, groupName);
 				
 				// Check if there are commands that this word should be tested against
 				// and add those to the commands map
-				Set<String> includedCommands = groupConfig.includeCommands();
-				if (!includedCommands.isEmpty()) {
-					for (String includedCmd : includedCommands) {
-						ArrayList<String> listForThisCommand = this.mapWordsInCommands.get(includedCmd);
-						if (listForThisCommand == null) {
-							// Create a list for this command if one doesn't exist
-							listForThisCommand = new ArrayList<String>();
-							this.mapWordsInCommands.put(includedCmd, listForThisCommand);
-
-							// Add the command to the list
-							this.relevantCommands.add(includedCmd);
-						}
-						
-						// Add the word
-						listForThisCommand.add(word);
-					}
-				}
+				this.collectCommandMap(word, groupConfig.includeCommands());
 			}
 	
 		}
+	}
+	
+	/**
+	 * Collect the relevant commands per word given, based on the group configuration
+	 * Create a map where command names are keys, and the values are a list of all words
+	 * that are included in the groups that include this command.
+	 *
+	 * @param word Given word match
+	 * @param commandsInGroup A set of the commands in the group
+	 */
+	private void collectCommandMap(String word, Set<String> commandsInGroup) {
+		for (String includedCmd : commandsInGroup) {
+			// For each command, get the existing list first
+			ArrayList<String> wordListForThisCommand = this.mapWordsInCommands.get(includedCmd);
+			if (wordListForThisCommand == null) {
+				// Create a list for this command if one doesn't exist
+				wordListForThisCommand = new ArrayList<String>();
+				this.mapWordsInCommands.put(includedCmd, wordListForThisCommand);
+			}
+			
+			// Add the word into the command map, if the word doesn't already exist in it
+			if (!wordListForThisCommand.contains(word)) {
+				wordListForThisCommand.add(word);
+			}
+
+		}
+
 	}
 
 	/**
@@ -212,7 +222,7 @@ public class WordManager {
 	 *
 	 * @return List of commands that have words that may match in a string
 	 */
-	public ArrayList<String> getRelevantCommands() {
-		return this.relevantCommands;
+	public Set<String> getRelevantCommands() {
+		return this.mapWordsInCommands.keySet();
 	}
 }
