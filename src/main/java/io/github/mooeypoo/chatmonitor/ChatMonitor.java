@@ -112,36 +112,37 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 
 		Boolean shouldAllowEvent = !action.isPreventSend();
 		String response = action.getMessage().replace("%player%", player.getName());
-		response = response.replace("%matchrule%", action.getMatchedRule());
-		response = response.replace("%word%", action.getOriginalWord());
+		response = response
+				.replace("%matchrule%", action.getMatchedRule())
+				.replace("%word%", action.getOriginalWord());
+
 		ArrayList<String> logMessage = new ArrayList<String>();
 		logMessage.add("*MATCH TRIGGERED: " + action.getOriginalWord() + "[type: " + action.getGroup() + "]*");
 		logMessage.add("\n-> Match rule: " + action.getMatchedRule());
 		if (action.isPreventSend()) {
-			logMessage.add("\n-> MESSAGE MUTED.");
-			logMessage.add("\n-> Attempted message: " + player.getName() + "> " + msg);
+			logMessage.add(
+				"\n-> MESSAGE MUTED." +
+				"\n-> Attempted message: " + player.getName() + "> " + msg
+			);
 			shouldAllowEvent = false;
 		}
+
 		if (!response.isEmpty()) {
 			if (action.isBroadcast()) {
+				// Broadcast the response to everyone
 				Bukkit.broadcastMessage(ChatColor.RED + response);
 				logMessage.add("\n-> Broadcast message> " + response);
 			} else {
+				// Send the response only to the relevant user
 				player.sendMessage(ChatColor.RED + response);
 				logMessage.add("\n-> Sent to user> " + response);
 			}
 		}
 		this.getLogger().warning(String.join(" ", logMessage));
+		
+		// Run the commands for this match
 		this.runCommands(player, action);
 		return shouldAllowEvent;
-	}
-
-	/**
-	 * Update the main config defaults.
-	 */
-	public void updateDefaults() {
-		getConfig().options().copyDefaults();
-		saveConfig();
 	}
 
 	/**
@@ -154,9 +155,10 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 	private void runCommands(Player player, WordAction action) {
 		for (String cmd : action.getCommands()) {
 			// Replace magic words:
-			String replacedCommand = cmd.replace("%player%", player.getName());
-			replacedCommand = replacedCommand.replace("%matchrule%", action.getMatchedRule());
-			replacedCommand = replacedCommand.replace("%word%", action.getOriginalWord());
+			String replacedCommand = cmd
+				.replace("%player%", player.getName())
+				.replace("%matchrule%", action.getMatchedRule())
+				.replace("%word%", action.getOriginalWord());
 
 			final String runnableCommand = replacedCommand;
 

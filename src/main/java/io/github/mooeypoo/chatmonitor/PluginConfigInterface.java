@@ -20,7 +20,11 @@ public interface PluginConfigInterface {
 	String defaultMessage();
 
 	@ConfKey("groups")
-	@ConfComments("A list of word-groups to use. Each group requires a separate config file; the config files will be auto-generated on first-run of this list if they don't already exist, and can be then edited to add specific behavior and a list of match words.")
+	@ConfComments({
+		"A list of word-groups to use. Each group requires a separate config file.",
+		"the config files will be auto-generated on first-run of this list if they don't already exist,",
+		"and can be then edited to add specific behavior and a list of match words."
+	})
 	@DefaultStrings({"list"})
 	Set<String> groups();
 }
