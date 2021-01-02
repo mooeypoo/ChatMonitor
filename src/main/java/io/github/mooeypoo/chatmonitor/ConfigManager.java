@@ -11,13 +11,13 @@ public class ConfigManager {
 	private ConfigLoader<PluginConfigInterface> mainConfig = null;
 	private HashMap<String, ConfigLoader<GroupConfigInterface>> configs = new HashMap<String, ConfigLoader<GroupConfigInterface>>();
 
-	public ConfigManager(Path dataFolder, String prefix) {
+	public ConfigManager(Path dataFolder, String prefix) throws ConfigurationException {
         this.dataFolder = dataFolder;
         this.prefix = prefix;
         this.reload();
     }
 
-	public void reload() {
+	public void reload() throws ConfigurationException {
 		// Main config
 		if (this.mainConfig == null) {
 			this.mainConfig = ConfigLoader.create(this.dataFolder, "config.yml", PluginConfigInterface.class);
@@ -53,7 +53,7 @@ public class ConfigManager {
 		return this.configs.keySet();
 	}
 	
-	public GroupConfigInterface getGroupConfigData(String groupName) {
+	public GroupConfigInterface getGroupConfigData(String groupName) throws ConfigurationException {
 		ConfigLoader<GroupConfigInterface> conf = this.configs.get(groupName);
 		if (conf == null) {
 			return null;
@@ -61,7 +61,7 @@ public class ConfigManager {
 		return conf.getConfigData();
 	}
 	
-	public Set<String> getGroupWords(String groupName) {
+	public Set<String> getGroupWords(String groupName) throws ConfigurationException {
 		GroupConfigInterface groupConfigData = this.getGroupConfigData(groupName);
 		if (groupConfigData == null) {
 			return Collections.<String>emptySet();

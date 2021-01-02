@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -23,13 +22,23 @@ public class WordManager {
 	
 	public WordManager(JavaPlugin plugin) {
 		this.plugin = plugin;
-		this.configManager = new ConfigManager(Paths.get(this.plugin.getDataFolder().getPath()), "ChatMonitor_wordgroup");
+		try {
+			this.configManager = new ConfigManager(Paths.get(this.plugin.getDataFolder().getPath()), "ChatMonitor_wordgroup");
+		} catch (ConfigurationException e) {
+			this.plugin.getLogger().warning("Initiation aborted for ChatMonitor. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
+			return;
+		}
 		this.collectWords();
 	}
 	
 	// Used for testing
 	public WordManager(Path filepath, String prefix) {
-		this.configManager = new ConfigManager(filepath, prefix);
+		try {
+			this.configManager = new ConfigManager(filepath, prefix);
+		} catch (ConfigurationException e) {
+			this.plugin.getLogger().warning("Initiation aborted for ChatMonitor. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
+			return;
+		}
 		this.collectWords();
 	}
 	/**
@@ -43,7 +52,11 @@ public class WordManager {
 		this.relevantCommands.clear();
 		
 		// Refresh all configs 
-		this.configManager.reload();
+		try {
+			this.configManager.reload();
+		} catch (ConfigurationException e) {
+			this.plugin.getLogger().warning("Reload loading default config. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
+		}
 
 		// Redo word collection
 		this.collectWords();
@@ -99,7 +112,12 @@ public class WordManager {
 		Set<String> groups = this.configManager.getGroupNames();
 
 		for (String groupName : groups) {
-			GroupConfigInterface groupConfig = this.configManager.getGroupConfigData(groupName);
+			GroupConfigInterface groupConfig = null;
+			try {
+				groupConfig = this.configManager.getGroupConfigData(groupName);
+			} catch (ConfigurationException e) {
+				this.plugin.getLogger().warning("Word group loading defaults. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
+			}
 			// Collect all words from the config group
 			this.allwords.addAll(groupConfig.words());
 
@@ -160,7 +178,13 @@ public class WordManager {
 		if (group == null) {
 			return null;
 		}
-		GroupConfigInterface config = this.configManager.getGroupConfigData(group);
+		GroupConfigInterface config = null;
+		try {
+			config = this.configManager.getGroupConfigData(group);
+		} catch (ConfigurationException e) {
+			this.plugin.getLogger().warning("Aborting generating action. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
+			return null;
+		}
 		
 		if (config == null) {
 			return null;

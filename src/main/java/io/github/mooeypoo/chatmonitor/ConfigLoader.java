@@ -30,30 +30,35 @@ public class ConfigLoader<C> extends ConfigurationHelper<C> {
 				new SnakeYamlConfigurationFactory<>(configClass, ConfigurationOptions.defaults(), yamlOptions));
 	}
 
-	public void reloadConfig() {
+	public void reloadConfig() throws ConfigurationException {
 		try {
 			configData = reloadConfigData();
 		} catch (IOException ex) {
-			throw new UncheckedIOException(ex);
-
+			throw new ConfigurationException(
+				this.fileName, "The was a problem loading this file.",
+				ex
+			);
 		} catch (ConfigFormatSyntaxException ex) {
 			configData = getFactory().loadDefaults();
-			System.err.println("Uh-oh! The syntax of your configuration ('" + this.fileName + "') are invalid. "
-					+ "Check your YAML syntax with a tool such as https://yaml-online-parser.appspot.com/");
-			ex.printStackTrace();
-
+			throw new ConfigurationException(
+				this.fileName, "The yaml syntax of this file is malformed. Using defaults, instead.",
+				ex
+			);
 		} catch (InvalidConfigException ex) {
 			configData = getFactory().loadDefaults();
-			System.err.println("Uh-oh! The values in your configuration ('" + this.fileName + "') are invalid. "
-					+ "Check to make sure you have specified the right data types.");
-			ex.printStackTrace();
+			throw new ConfigurationException(
+				this.fileName, "The keys and values used in this file are malformed. Using defaults, instead.",
+				ex
+			);
 		}
 	}
 
-	public C getConfigData() {
+	public C getConfigData() throws ConfigurationException {
 		C configData = this.configData;
 		if (configData == null) {
-			throw new IllegalStateException("Configuration ('" + this.fileName + "') has not been loaded yet");
+			throw new ConfigurationException(
+				this.fileName, "Configuration file was not yet loaded."
+			);
 		}
 		return configData;
 	}

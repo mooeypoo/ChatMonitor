@@ -1,37 +1,16 @@
 import static org.junit.Assert.*;
 
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import be.seeseemelk.mockbukkit.MockBukkit;
-import be.seeseemelk.mockbukkit.ServerMock;
-import io.github.mooeypoo.chatmonitor.ChatMonitor;
 import io.github.mooeypoo.chatmonitor.WordAction;
 import io.github.mooeypoo.chatmonitor.WordManager;
 
 public class WordManagerTest {
-//	private ServerMock server;
-//	private ChatMonitor plugin;
-//	@Before
-//	public void setUp()
-//	{
-//	    this.server = MockBukkit.mock();
-//	    this.plugin = (ChatMonitor) MockBukkit.load(ChatMonitor.class);
-//	}
-//
-//	@After
-//	public void tearDown()
-//	{
-//	    MockBukkit.unmock();
-//	}
-
 	@Test
 	public void testValidAndEmptyWordMatches() throws Exception {
 		WordManager wordManager = new WordManager(
@@ -105,6 +84,5 @@ public class WordManagerTest {
 			expectedRelevantCommands.containsAll(wordManager.getRelevantCommands())
 		);
 	}
-
 }
 
