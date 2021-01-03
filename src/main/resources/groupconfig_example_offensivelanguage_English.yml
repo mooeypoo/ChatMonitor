@@ -1,0 +1,109 @@
+ # ---------------------------------------------------------------------------------------------
+ # This file represents a starting point to cover many of the known iterations of
+ # offensive language in English. You can use this configuration setup, and especially
+ # the list of words below, to kickstart the plugin to start muting offensive language.
+ # Set up the rest of the actions, message, commands and muting options per your specifications.
+ # ---------------------------------------------------------------------------------------------
+ # Message displayed to the user (or broadcast in general chat)
+ # if a word in the list matches user text.
+ # You can use magic words that will be replaced before the message
+ # is sent to the user:
+ # - %player% the player whose message triggered the match
+ # - %word% the word that was caught
+ # - %matchrule% the rule (in the list below) that was triggered on the matched word
+message: 'This word ("%word%") is not allowed on this server.'
+ # Send the response message to the entire chat. If false, the message is only visible to the user whose text matched the word from the list.
+broadcast: false
+ # A list of raw commands to execute after a word is matched.
+runcommands:
+  -  ''
+ # Stop the user message from appearing in the main chat if there was a word match.
+preventsend: true
+ # A list of commands the plugin should look into when searching for word matches. Do not include the slash (Example: - tell)
+includecommands:
+  -  'tell'
+ # A list of words to trigger the behavior of this group. This is a regular expression list. If words are added plainly, they will match anywhere in the string. Example: 'foo' will match 'food' and 'blafoo'. For comlpex behavior, like limiting word boundaries and alternative spellings, see regular expression documentation, and visit the ChatMonitor wiki for example lists.
+words:
+  # Cover 'ahole*'
+  - \baholes?\b
+  - \basshats?\b
+  - \bassh[0o]les?\b
+  # Cover 'anus' as a word, but not as part of other words
+  - \banus\b
+  # Cover 'ass' on its own, never 'assassin' or 'bass', but add specific bad word examples like 'assface'
+  - \bass\b
+  - \bass\s*\S?\s*face
+  - \bass?\s*\S?\s*h[o0]le
+  - \bass\s*\S?\s*w[1!i]pex
+  - \bazzh[o0]le
+  - \bbast[ae]rd
+  # Iterations of "bitch"
+  - \bb[1!i]a?tch
+  # Cover the combination of both words with any separator, or no separator
+  - \bblow\s*\S?\s*job\b
+  - \bbutthole\b
+  - \bbuttwipe\b
+  - c0ck
+  - c0k
+  # Cover the combination of both words with any separator, or no separator
+  - \bcarpet\s*\S?\s*muncher\b
+  - \bclit\b
+  - \bcocks?\b
+  - \bcock\s*\S?\s*head\b
+  - \bcock\s*\S?\s*sucker\b
+  - \bcrap\b
+  - \bcum\b
+  # Cover anything that starts with the word
+  - \bcunt
+  # Cover the word itself (not as part of other words) but add specific examples after
+  - \bdick\b
+  - \bdick\s*\S?\s*head\b
+  # Cover 'dildo' / 'dilldo' / 'dildos' and its 'dild0' alternative
+  - \bdill?dos?\b
+  - \bdill?d0s?\b
+  - \bdyke\b
+  # Match the word "fuck" as is (inside anything) or with spaces, dots, underlines or dashes between the letters
+  - f[\._\-\s]*u[\._\-\s]*c[\._\-\s]*k
+  # Match standalone word iterations of 'fag'. This is very inclusive and may produce false-positives
+  # this includes 'fag1t', fag0t, etc
+  - \bfagg?(ie)?([oei01]t)?y?[sz]?\b
+  # Common iterations on "fuck" (fuk/fukah/fukkin) - as individual words
+  - \bfukk?(ing?|ah?)?\b
+  # Match "jackoff"/"jerkoff" with or without spaces between the words
+  - \bjack\s*\S?\s*off\b
+  - \bjerk\s*\S?\s*off\b
+  - \bjerk\s*\S?\s*face\b
+  - \bkunts?\b
+  - \blezzian\b
+  - \d[i1]psh[i1]ts?\b
+  - \bmass?t[ue]rbai?t(e|[i1]ng|er)\b
+  - \bn[1!i]gg?(er|a|ah|ur)\b
+  - \borgas[iu]?m\b
+  - \bpe+n[1iua]s+\b
+  # This is fairly inclusive; would also fit things like "pinus" and "penus" and "pin1s"
+  - \bp[ei]+n[1iu]+s+\b
+  # Ph-prefix iterations of 'fuck'
+  - \bphuck(er|[1!i]ng)?\b
+  - \bphukk?(er|[1!i]ng)\b
+  - \bpuss(y|ee?)\b
+  - \bretard(ed)?\b
+  - \bscank\b
+  - \bsc?hlong\b
+  - \bsemen\b
+  - \bsex(y|ing)?\b,
+  # Iterations on 'shit'
+  - \bsh[i1!]tt?(er|y|[!1i]ng|z|s)\b
+  - \bsh[i1!]t[\._\-\s]*face\b
+  - \bskank(s|e?y)?\b
+  - \bslutt?(s|z|y)?\b
+  - \bt[1!i]ts?\b
+  - \bturds?\b
+  # Iterations and misspellings of vagina
+  - \bva[gj][1!i]+na\b
+  - \bvulva\b
+  # Iterations and misspellings of whore
+  - \bwh[o0]+r(e*|3|[1!i]ng)?\b
+  # Versions of xxx and x-rated
+  - \bxxx\b
+  - \bx\s*\S?\s*rated\b
+  - \bcl[1i!]+t\b
