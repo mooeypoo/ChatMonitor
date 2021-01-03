@@ -161,7 +161,7 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 	 */
 	private void runCommands(Player player, WordAction action) {
 		for (String cmd : action.getCommands()) {
-			if (cmd.isBlank() || cmd.isEmpty()) {
+			if (cmd == null || cmd.trim().isEmpty()) {
 				continue;
 			}
 			// Replace magic words:
