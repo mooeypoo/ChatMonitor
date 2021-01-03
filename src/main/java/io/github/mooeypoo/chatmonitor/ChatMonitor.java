@@ -117,7 +117,7 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 				.replace("%word%", action.getOriginalWord());
 
 		ArrayList<String> logMessage = new ArrayList<String>();
-		logMessage.add("*MATCH TRIGGERED: " + action.getOriginalWord() + "[type: " + action.getGroup() + "]*");
+		logMessage.add("*MATCH TRIGGERED: " + action.getOriginalWord() + "[group: " + action.getGroup() + "]*");
 		logMessage.add("\n-> Match rule: " + action.getMatchedRule());
 		if (action.isPreventSend()) {
 			logMessage.add(
@@ -154,6 +154,9 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 	 */
 	private void runCommands(Player player, WordAction action) {
 		for (String cmd : action.getCommands()) {
+			if (cmd.isBlank() || cmd.isEmpty()) {
+				continue;
+			}
 			// Replace magic words:
 			String replacedCommand = cmd
 				.replace("%player%", player.getName())

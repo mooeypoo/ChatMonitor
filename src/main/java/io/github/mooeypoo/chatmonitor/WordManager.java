@@ -143,6 +143,10 @@ public class WordManager {
 	 */
 	private void collectCommandMap(String word, Set<String> commandsInGroup) {
 		for (String includedCmd : commandsInGroup) {
+			if (includedCmd.isBlank() || includedCmd.isEmpty()) {
+				// Skip empty lines
+				continue;
+			}
 			// For each command, get the existing list first
 			ArrayList<String> wordListForThisCommand = this.mapWordsInCommands.get(includedCmd);
 			if (wordListForThisCommand == null) {
