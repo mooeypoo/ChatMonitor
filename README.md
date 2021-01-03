@@ -3,10 +3,18 @@
 
 # Mincraft-ChatMonitor
 
+![ChatMonitor banner](https://raw.githubusercontent.com/mooeypoo/ChatMonitor/main/assets/ChatMonitor-header.png)
+
 A plugin for minecraft server (Spigot) that monitors the chat and responds when text matches a list of words.
 
-## Stability
-This plugin is considered "BETA" stage. It was not fully tested on large scale servers with other plugins.
+Automatically respond to messages in chat or commands sent by users. ChatMonitor is a flexible configurable system allowing you to respond to any trigger and decide whether the matching message:
+* Should be muted
+* Should be responded to directly to the user or publically as a chat broadcast
+* Cancelled, if it is part of an action
+* Trigger further commands to the server, or to other plugins.
+
+ChatMonitor allows you to define groups of words, each group with separate responses, replies, and options, all configurable in configuration files.
+
 
 ## Install
 
@@ -17,10 +25,32 @@ After running the plugin for the first time, you can edit `config.yml` with your
 
 Read below about the definition of the configuration files.
 
+### Initial configuration
+If you want to start with an initial configuration, there are config files available in the Example folder that will let you kickstart your word-lists.
+
+* [ChatMonitor_wordgroup_offensive.yml](https://github.com/mooeypoo/ChatMonitor/blob/main/src/main/resources/Examples/ChatMonitor_wordgroup_offensive.yml) - Contains a base list of regular expressions aimed to capture most common offensive language in English. This file will continuously be updated, so make sure to update the list periodically.
+
+Download any of those files (or multiple) and add them to your `/plugins/ChatMonitor` data folder. Make sure to add the group names to your `config.yml` (example: `- offensive` in the group list to include the `ChatMonitor_wordgroup_offensive.yml` file.)
+
+
 ## Usage
 The plugin listens to text events in chat and commands and responds according to the given configuration. The outgoing chat is tested against the words that are provided in the configuration files, and if a match is found, the system will then respond based on the group's configuration.
 
-**Beware:** The order of evaluating the configuration files is not entirely predictable. If you provide the same word in different groups that have different response definitions, the system will only respond with what it considers the first instance, which may be any of the groups. Please avoid having the same word or the same phrase in different groups. **This is even more important if you are using regular expressions that may match the same result in two different groups**.
+As a result, the plugin can be used for various purposes, like:
+
+* **Dealing with offensive language** -- muting the message, sending a response to the user, and triggering a warning or ban command.
+* **Responding to keywords** -- allowing the message through and responding with a broadcast response to the entire chat.
+* **Dealing with code of conduct violations** -- responding to terms that indicate violation of the rules by muting the message, sending a warning to the user or general chat, or escalating by tiggering a followup command for warning or banning the user.
+
+### Examples
+
+Responding to an offensive word by muting the message, sending the user a note, and triggering a command for a ban-manager plugin.
+![Example 1](https://raw.githubusercontent.com/mooeypoo/ChatMonitor/main/assets/offensive-words-example.png)
+
+Responding to trigger "!rules" by broadcasting a message to the entire chat.
+![Example 2](https://raw.githubusercontent.com/mooeypoo/ChatMonitor/main/assets/response-faq-example.png)
+
+**Note about multiple groups:** The order of evaluating the configuration files is not entirely predictable. If you provide the same word in different groups that have different response definitions, the system will only respond with what it considers the first instance, which may be any of the groups. Please avoid having the same word or the same phrase in different groups. **This is even more important if you are using regular expressions that may match the same result in two different groups**.
 
 ### Configuration
 The plugin reads the main configuration files and then the subsequent word lists in secondary configuration files. When setting up groups in the main config file, you must also create corresponding config files that are named as `words_[group name].yml` and place the group's definition and response instructions.
