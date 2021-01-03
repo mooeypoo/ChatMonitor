@@ -143,7 +143,7 @@ public class WordManager {
 	 */
 	private void collectCommandMap(String word, Set<String> commandsInGroup) {
 		for (String includedCmd : commandsInGroup) {
-			if (includedCmd.isBlank() || includedCmd.isEmpty()) {
+			if (includedCmd == null || includedCmd.trim().isEmpty()) {
 				// Skip empty lines
 				continue;
 			}

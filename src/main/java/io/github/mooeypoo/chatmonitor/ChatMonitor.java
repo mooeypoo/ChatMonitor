@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class ChatMonitor extends JavaPlugin implements Listener {
 	private WordManager wordmanager;
+	private int spigotResourceId = 87395;
 
 	public ChatMonitor() {
 		super();
@@ -30,6 +31,12 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 
 	@Override
 	public void onEnable() {
+		new UpdateChecker(this, this.spigotResourceId).getVersion(version -> {
+            if (!this.getDescription().getVersion().equalsIgnoreCase(version)) {
+                this.getLogger().info("There is a new version for the plugin. Please visit spigotmc and download the latest version.");
+            }
+        });
+		
 		// Initialize word list and config
 		this.getLogger().info("Initializing word lists...");
 		this.wordmanager = new WordManager(this);
