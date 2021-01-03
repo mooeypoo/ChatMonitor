@@ -4,6 +4,8 @@
  # the list of words below, to kickstart the plugin to start muting offensive language.
  # Set up the rest of the actions, message, commands and muting options per your specifications.
  # ---------------------------------------------------------------------------------------------
+ # Don't forget to add 'offensive' to your config.yml list of groups.
+ # ---------------------------------------------------------------------------------------------
  # Message displayed to the user (or broadcast in general chat)
  # if a word in the list matches user text.
  # You can use magic words that will be replaced before the message
