@@ -1,6 +1,6 @@
 name: ChatMonitor
 main: io.github.mooeypoo.chatmonitor.ChatMonitor
-version: 1.0.0
+version: 1.0.1
 description: A plugin that monitors chat and responds to preset list of words.
 author: mooeypoo
 permissions:
