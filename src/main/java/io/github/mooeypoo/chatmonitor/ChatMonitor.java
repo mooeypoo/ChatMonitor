@@ -1,9 +1,10 @@
 package io.github.mooeypoo.chatmonitor;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+
+import org.apache.maven.artifact.versioning.ComparableVersion;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,7 +34,27 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 	public void onEnable() {
 		new UpdateChecker(this, this.spigotResourceId).getVersion(version -> {
             if (!this.getDescription().getVersion().equalsIgnoreCase(version)) {
-                this.getLogger().info("There is a new version for the plugin. Please visit spigotmc and download the latest version.");
+            	ComparableVersion remoteVersion = new ComparableVersion(version);
+            	ComparableVersion localVersion = new ComparableVersion(this.getDescription().getVersion());
+            	String message = null;
+            	
+            	if (localVersion.compareTo(remoteVersion) < 0) {
+            		// Local version is lower than remote
+            		message = String.format("[ChatMonitor] UPDATE ALERT. ChatMonitor v%s is published. Your server is currently using v%s. Please consider updating.",
+	            			version,
+	            			this.getDescription().getVersion()
+	                	);
+            	} else if (localVersion.compareTo(remoteVersion) > 0) {
+            		// Local version is higher than remote; probably using SNAPSHOT or local test
+            		message = String.format("[ChatMonitor] Version alert. You are using an unpublished version (v%s). Published (supported) version is v%s.",
+	            			this.getDescription().getVersion(),
+	            			version
+	                	);
+            	}
+            	
+            	if (message != null) {
+                    this.getLogger().info(message);
+            	}
             }
         });
 		
@@ -93,7 +114,7 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 		try {
 			action = this.wordmanager.processWordsInCommand(cmdName, event.getMessage());
 		} catch (Exception e) {
-			this.getLogger().info(e.getMessage());
+			this.getLogger().info("Could not process words. Action skipped: " + e.getMessage());
 			return;
 		}
 
@@ -118,34 +139,18 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 		}
 
 		Boolean shouldAllowEvent = !action.isPreventSend();
-		String response = action.getMessage().replace("%player%", player.getName());
-		response = response
-				.replace("%matchrule%", action.getMatchedRule())
-				.replace("%word%", action.getOriginalWord());
+		String response = MessageHandler.replacePlaceholdersFromAction(action.getMessage(), player, action);
 
-		ArrayList<String> logMessage = new ArrayList<String>();
-		logMessage.add("*MATCH TRIGGERED: " + action.getOriginalWord() + "[group: " + action.getGroup() + "]*");
-		logMessage.add("\n-> Match rule: " + action.getMatchedRule());
-		if (action.isPreventSend()) {
-			logMessage.add(
-				"\n-> MESSAGE MUTED." +
-				"\n-> Attempted message: " + player.getName() + "> " + msg
-			);
-			shouldAllowEvent = false;
-		}
-
-		if (!response.isEmpty()) {
+		if (!response.trim().isEmpty()) {
 			if (action.isBroadcast()) {
 				// Broadcast the response to everyone
 				Bukkit.broadcastMessage(ChatColor.RED + response);
-				logMessage.add("\n-> Broadcast message> " + response);
 			} else {
 				// Send the response only to the relevant user
 				player.sendMessage(ChatColor.RED + response);
-				logMessage.add("\n-> Sent to user> " + response);
 			}
 		}
-		this.getLogger().warning(String.join(" ", logMessage));
+		this.getLogger().info(MessageHandler.createLogMessage(player, action, msg, response));
 		
 		// Run the commands for this match
 		this.runCommands(player, action);
@@ -164,13 +169,9 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 			if (cmd == null || cmd.trim().isEmpty()) {
 				continue;
 			}
-			// Replace magic words:
-			String replacedCommand = cmd
-				.replace("%player%", player.getName())
-				.replace("%matchrule%", action.getMatchedRule())
-				.replace("%word%", action.getOriginalWord());
 
-			final String runnableCommand = replacedCommand;
+			// Replace magic words:
+			final String runnableCommand = MessageHandler.replacePlaceholdersFromAction(cmd, player, action);
 
 			// Log and execute:
 			this.getLogger().info("Invoking command: " + runnableCommand);
