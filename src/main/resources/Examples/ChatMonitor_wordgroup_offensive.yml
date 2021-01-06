@@ -24,6 +24,7 @@ preventsend: true
  # A list of commands the plugin should look into when searching for word matches. Do not include the slash (Example: - tell)
 includecommands:
   -  'tell'
+  -  'me'
  # A list of words to trigger the behavior of this group. This is a regular expression list. If words are added plainly, they will match anywhere in the string. Example: 'foo' will match 'food' and 'blafoo'. For comlpex behavior, like limiting word boundaries and alternative spellings, see regular expression documentation, and visit the ChatMonitor wiki for example lists.
 words:
   # Cover 'ahole*'
@@ -38,28 +39,26 @@ words:
   - \bass?\s*\S?\s*h[o0]le
   - \bass\s*\S?\s*w[1!i]pex
   - \bazzh[o0]le
-  - \bbast[ae]rd
   # Iterations of "bitch"
   - \bb[1!i]a?tch
   # Cover the combination of both words with any separator, or no separator
-  - \bblow\s*\S?\s*job\b
+  - \bblow\s*\S?\s*job\b # blow job
   - \bbutthole\b
   - \bbuttwipe\b
   - c0ck
   - c0k
   # Cover the combination of both words with any separator, or no separator
-  - \bcarpet\s*\S?\s*muncher\b
-  - \bclit\b
-  - \bcocks?\b
-  - \bcock\s*\S?\s*head\b
-  - \bcock\s*\S?\s*sucker\b
-  - \bcrap\b
-  - \bcum\b
+  - \bcarpet\s*\S?\s*muncher\b # carpet muncher (with and without spaces)
+  - \bcl[1i!]+t\b # clit, cl1t
+  - \bcocks?\b # cock, cocks
+  - \bcock\s*\S?\s*head\b # cock head
+  - \bcock\s*\S?\s*sucker\b # cock sucker
+  - \bcum\b # cum
   # Cover anything that starts with the word
   - \bcunt
   # Cover the word itself (not as part of other words) but add specific examples after
-  - \bdick\b
-  - \bdick\s*\S?\s*head\b
+  - \bd[i1]+ck\b
+  - \bd[i1]ck\s*\S?\s*head\b
   # Cover 'dildo' / 'dilldo' / 'dildos' and its 'dild0' alternative
   - \bdill?dos?\b
   - \bdill?d0s?\b
@@ -88,24 +87,22 @@ words:
   - \bphuck(er|[1!i]ng)?\b
   - \bphukk?(er|[1!i]ng)\b
   - \bpuss(y|ee?)\b
-  - \bretard(ed)?\b
-  - \bscank\b
-  - \bsc?hlong\b
+  - \bs[ck]ank\b # skank, scank
+  - \bsc?hl[o0]ng\b
   - \bsemen\b
-  - \bsex(y|ing)?\b,
+  - \bsex(y|ing)?\b
   # Iterations on 'shit'
   - \bsh[i1!]tt?(er|y|[!1i]ng|z|s)\b
   - \bsh[i1!]t[\._\-\s]*face\b
   - \bskank(s|e?y)?\b
   - \bslutt?(s|z|y)?\b
-  - \bt[1!i]ts?\b
-  - \bturds?\b
+  - \bt[1!i]ts?\b # tits, t1ts, ...
+  - \bturds?\b # turd, turds
+  - \btwat\b # twat
   # Iterations and misspellings of vagina
-  - \bva[gj][1!i]+na\b
-  - \bvulva\b
-  # Iterations and misspellings of whore
-  - \bwh[o0]+r(e*|3|[1!i]ng)?\b
+  - \bva[gj][1!i]+na\b # vagina, vajina, vag1na, ...
+  - \bvulva\b 
+  - \bwh[o0]+r(e*|3|[1!i]ng)?\b # whore, whoring, wh0r3, ...
   # Versions of xxx and x-rated
   - \bxxx\b
   - \bx\s*\S?\s*rated\b
-  - \bcl[1i!]+t\b
