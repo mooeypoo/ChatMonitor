@@ -5,10 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
 ### Added
+- Enable using color codes in user (or broadcast) responses in the config
 - A 'mild' word config example.
 
-## [1.0.1]
+### Fixed
+- Utilize dependency shading
+
+## [v1.0.1]
 ### Added
 - This CHANGELOG.
 - Example folder and a configuration file for common English swear words.
@@ -25,5 +30,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 [Unreleased]: https://github.com/mooeypoo/ChatMonitor/compare/v1.0.0...HEAD
-[1.0.1]: https://github.com/mooeypoo/ChatMonitor/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/mooeypoo/ChatMonitor/releases/tag/v1.0.0
+[v1.0.1]: https://github.com/mooeypoo/ChatMonitor/compare/v1.0.0...v1.0.1
+[v1.0.0]: https://github.com/mooeypoo/ChatMonitor/releases/tag/v1.0.0
