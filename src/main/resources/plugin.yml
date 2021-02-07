@@ -7,3 +7,13 @@ permissions:
    chatmonitor.words.ignore:
       description: Chat monitor will completely ignore any chat or commands coming from this user.
       default: op
+   chatmonitor.cmd.reload:
+      description: Allows the user to run the reload command
+      default: op
+   chatmonitor.cmd.test:
+      description: Allows the user to run the test command
+      default: op
+commands:
+   chatmonitor:
+      description: Commands triggering actions in ChatMonitor plugin.
+      usage: Use `/chatmonitor help` to see the list of all available actions. 

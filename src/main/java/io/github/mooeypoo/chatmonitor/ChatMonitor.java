@@ -62,6 +62,9 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 		this.getLogger().info("Initializing word lists...");
 		this.wordmanager = new WordManager(this);
 
+		// Initialize command
+		this.getCommand("chatmonitor").setExecutor(new ChatMonitorCommandExecutor(this));
+
 		// Connect events
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvents(this, (this));
@@ -190,5 +193,9 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 				this.getLogger().warning("InterruptedException for command \"" + cmd + "\"");
 			}
 		}
+	}
+	
+	public WordManager getWordManager() {
+		return this.wordmanager;
 	}
 }

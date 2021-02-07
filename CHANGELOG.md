@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added 'chatmonitor' command with administration actions
+- Added 'chatmonitor reload' command to reload configuration files without rebooting the server
+- Added 'chatmonitor test [string]' command to enable testing of text without risking sending it through to the users
 - Enable using color codes in user (or broadcast) responses in the config
 - A 'mild' word config example.
 
