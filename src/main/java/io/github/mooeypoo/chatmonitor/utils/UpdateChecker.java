@@ -1,4 +1,4 @@
-package io.github.mooeypoo.chatmonitor;
+package io.github.mooeypoo.chatmonitor.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

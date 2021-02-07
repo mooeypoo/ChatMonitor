@@ -1,4 +1,4 @@
-package io.github.mooeypoo.chatmonitor;
+package io.github.mooeypoo.chatmonitor.configs;
 
 import java.nio.file.Path;
 import java.util.Collections;

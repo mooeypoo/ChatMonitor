@@ -10,6 +10,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
+
+import io.github.mooeypoo.chatmonitor.commands.ChatMonitorCommandExecutor;
+import io.github.mooeypoo.chatmonitor.utils.MessageHandler;
+import io.github.mooeypoo.chatmonitor.utils.UpdateChecker;
+import io.github.mooeypoo.chatmonitor.words.WordAction;
+import io.github.mooeypoo.chatmonitor.words.WordManager;
+
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.entity.Player;

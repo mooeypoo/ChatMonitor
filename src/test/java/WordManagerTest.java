@@ -7,8 +7,8 @@ import static java.util.Arrays.asList;
 
 import org.junit.Test;
 
-import io.github.mooeypoo.chatmonitor.WordAction;
-import io.github.mooeypoo.chatmonitor.WordManager;
+import io.github.mooeypoo.chatmonitor.words.WordAction;
+import io.github.mooeypoo.chatmonitor.words.WordManager;
 
 public class WordManagerTest {
 	@Test

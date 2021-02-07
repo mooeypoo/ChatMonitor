@@ -1,5 +1,6 @@
-package io.github.mooeypoo.chatmonitor;
+package io.github.mooeypoo.chatmonitor.commands;
 
+import java.awt.Color;
 import java.util.HashMap;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -10,6 +11,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import io.github.mooeypoo.chatmonitor.ChatMonitor;
+import io.github.mooeypoo.chatmonitor.words.WordAction;
 
 
 public class ChatMonitorCommandExecutor  implements CommandExecutor {
@@ -76,14 +80,29 @@ public class ChatMonitorCommandExecutor  implements CommandExecutor {
 				return true;
 			}
 			
+			ChatColor isMutedColor = action.isPreventSend() ? ChatColor.RED : ChatColor.GREEN;
+			String isMutedString = action.isPreventSend() ? "MUTED" : "NOT MUTED";
 			// Something in that string was caught
 			this.outputToPlayerOrConsole(
-					"RESULT: " + (toPlayer ? ChatColor.RED : "" ) + "WORD CAUGHT!",
-					sender
-				);
-			this.outputToPlayerOrConsole("-> WORD CAUGHT: " + (toPlayer ? ChatColor.RED : "") + action.getOriginalWord(), sender);
+				String.format("%s %s",
+						String.format(
+							"-> %sCAUGHT: %s%s (GROUP: %s%s%s) ",
+							(toPlayer ? ChatColor.RED : ""),
+							action.getOriginalWord(),
+							(toPlayer ? ChatColor.WHITE : ""),
+							(toPlayer ? ChatColor.BLUE : ""),
+							action.getGroup(),
+							(toPlayer ? ChatColor.WHITE : "")
+						),
+						String.format(
+							"%s%s",
+							toPlayer ? isMutedColor : "",
+							isMutedString
+						)
+				),
+				sender
+			);
 			this.outputToPlayerOrConsole("-> MATCHED RULE: " + (toPlayer ? ChatColor.RED : "") + action.getMatchedRule(), sender);
-			this.outputToPlayerOrConsole("-> TEXT IS MUTED: " + (toPlayer ? ChatColor.RED : "") + (action.isPreventSend() ? "YES" : "NO"), sender);
 			return true;
 		}
 

@@ -1,4 +1,4 @@
-package io.github.mooeypoo.chatmonitor;
+package io.github.mooeypoo.chatmonitor.configs;
 
 public class ConfigurationException extends Exception {
 	private static final long serialVersionUID = 1L;

@@ -1,4 +1,4 @@
-package io.github.mooeypoo.chatmonitor;
+package io.github.mooeypoo.chatmonitor.words;
 
 import java.util.Set;
 

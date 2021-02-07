@@ -1,4 +1,4 @@
-package io.github.mooeypoo.chatmonitor;
+package io.github.mooeypoo.chatmonitor.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.entity.Player;
+
+import io.github.mooeypoo.chatmonitor.words.WordAction;
 
 public class MessageHandler {
 	private static List<String> validPlaceholderKeys = Arrays.asList(new String[] {"player", "matchrule", "word"});

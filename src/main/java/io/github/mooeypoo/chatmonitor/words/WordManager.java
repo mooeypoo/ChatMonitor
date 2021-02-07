@@ -1,4 +1,4 @@
-package io.github.mooeypoo.chatmonitor;
+package io.github.mooeypoo.chatmonitor.words;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,6 +11,10 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.bukkit.plugin.java.JavaPlugin;
+
+import io.github.mooeypoo.chatmonitor.configs.ConfigManager;
+import io.github.mooeypoo.chatmonitor.configs.ConfigurationException;
+import io.github.mooeypoo.chatmonitor.configs.GroupConfigInterface;
 
 public class WordManager {
 	private HashMap<String, String> wordmap = new HashMap<String, String>();

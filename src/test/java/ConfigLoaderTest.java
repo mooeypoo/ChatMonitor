@@ -12,10 +12,10 @@ import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Test;
 
-import io.github.mooeypoo.chatmonitor.ConfigLoader;
-import io.github.mooeypoo.chatmonitor.ConfigurationException;
-import io.github.mooeypoo.chatmonitor.GroupConfigInterface;
-import io.github.mooeypoo.chatmonitor.PluginConfigInterface;
+import io.github.mooeypoo.chatmonitor.configs.ConfigLoader;
+import io.github.mooeypoo.chatmonitor.configs.ConfigurationException;
+import io.github.mooeypoo.chatmonitor.configs.GroupConfigInterface;
+import io.github.mooeypoo.chatmonitor.configs.PluginConfigInterface;
 
 public class ConfigLoaderTest {
 	@After
