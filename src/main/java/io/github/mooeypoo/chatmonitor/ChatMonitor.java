@@ -142,12 +142,14 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 		String response = MessageHandler.replacePlaceholdersFromAction(action.getMessage(), player, action);
 
 		if (!response.trim().isEmpty()) {
+			String colorResponse = ChatColor.translateAlternateColorCodes('&', response);
+
 			if (action.isBroadcast()) {
 				// Broadcast the response to everyone
-				Bukkit.broadcastMessage(ChatColor.RED + response);
+				Bukkit.broadcastMessage(colorResponse);
 			} else {
 				// Send the response only to the relevant user
-				player.sendMessage(ChatColor.RED + response);
+				player.sendMessage(colorResponse);
 			}
 		}
 		this.getLogger().info(MessageHandler.createLogMessage(player, action, msg, response));
