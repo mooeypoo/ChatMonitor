@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.1.0]
 ### Added
 - Added 'chatmonitor' command with administration actions
 - Added 'chatmonitor reload' command to reload configuration files without rebooting the server
@@ -31,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2020-01-02
 - Initial official release.
 
-
-[Unreleased]: https://github.com/mooeypoo/ChatMonitor/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/mooeypoo/ChatMonitor/compare/v1.1.0...HEAD
+[v1.1.0]: https://github.com/mooeypoo/ChatMonitor/compare/v1.0.1...v1.1.0
 [v1.0.1]: https://github.com/mooeypoo/ChatMonitor/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/mooeypoo/ChatMonitor/releases/tag/v1.0.0
