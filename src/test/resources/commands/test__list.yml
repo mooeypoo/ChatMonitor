@@ -18,12 +18,6 @@ words:
  # A list of commands the plugin should look into when searching for word matches. Do not include the slash (Example: - tell)
 includecommands:
   -  'tell'
- # A list of raw commands to execute after a word is matched. Each entry will be executed after the word is matched.
- # You can use magic words that will be replaced before the command is executed:
- # - %player% the player whose message triggered the match
- # - %word% the word that was caught
- # - %matchrule% the rule (in the list below) that was triggered on the matched word
-runcommands:
  # If there was a word match, this potion dictates whether the message that triggered
  # the match is allowed to be sent to the chat. If the option is false, the message that
  # contained a matched word will be muted and not appear in chat, and, if it was used in a
@@ -31,3 +25,9 @@ runcommands:
  # will still occur, but the message itself (or command) will be allowed to pass through to the
  # chat, or the command allowed to continue and be processed.
 preventsend: false
+ # A list of raw commands to execute after a word is matched. Each entry will be executed after the word is matched.
+ # You can use magic words that will be replaced before the command is executed:
+ # - %player% the player whose message triggered the match
+ # - %word% the word that was caught
+ # - %matchrule% the rule (in the list below) that was triggered on the matched word
+runcommands:

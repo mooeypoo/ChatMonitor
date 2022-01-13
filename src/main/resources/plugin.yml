@@ -1,19 +1,20 @@
 name: ChatMonitor
 main: io.github.mooeypoo.chatmonitor.ChatMonitor
-version: 1.1.0
-description: A plugin that monitors chat and responds to preset list of words.
+description: "A plugin that monitors chat and responds to preset list of words."
+version: "1.2.0"
+api-version: 1.18
 author: mooeypoo
-permissions:
-   chatmonitor.words.ignore:
-      description: Chat monitor will completely ignore any chat or commands coming from this user.
-      default: op
-   chatmonitor.cmd.reload:
-      description: Allows the user to run the reload command
-      default: op
-   chatmonitor.cmd.test:
-      description: Allows the user to run the test command
-      default: op
 commands:
-   chatmonitor:
-      description: Commands triggering actions in ChatMonitor plugin.
-      usage: Use `/chatmonitor help` to see the list of all available actions. 
+  chatmonitor:
+    description: "Commands triggering actions in ChatMonitor plugin."
+    usage: "Use `/chatmonitor help` to see the list of all available actions."
+permissions:
+  chatmonitor.cmd.reload:
+    default: op
+    description: "Allows the user to run the reload command"
+  chatmonitor.cmd.test:
+    default: op
+    description: "Allows the user to run the test command"
+  chatmonitor.words.ignore:
+    default: op
+    description: "Chat monitor will completely ignore any chat or commands coming from this user."
