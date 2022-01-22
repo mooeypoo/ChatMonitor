@@ -1,15 +1,17 @@
 package io.github.mooeypoo.chatmonitor.configs;
 
+import static java.util.Collections.emptySet;
+
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class ConfigManager {
     private Path dataFolder;
 	private String prefix;
 	private ConfigLoader<PluginConfigInterface> mainConfig = null;
-	private HashMap<String, ConfigLoader<GroupConfigInterface>> configs = new HashMap<String, ConfigLoader<GroupConfigInterface>>();
+	private Map<String, ConfigLoader<GroupConfigInterface>> configs = new HashMap<>();
 
 	public ConfigManager(Path dataFolder, String prefix) throws ConfigurationException {
         this.dataFolder = dataFolder;
@@ -45,7 +47,7 @@ public class ConfigManager {
 		return this.mainConfig;
 	}
 
-	public HashMap<String, ConfigLoader<GroupConfigInterface>> getGroupConfigs() {
+	public Map<String, ConfigLoader<GroupConfigInterface>> getGroupConfigs() {
 		return this.configs;
 	}
 	
@@ -64,7 +66,7 @@ public class ConfigManager {
 	public Set<String> getGroupWords(String groupName) throws ConfigurationException {
 		GroupConfigInterface groupConfigData = this.getGroupConfigData(groupName);
 		if (groupConfigData == null) {
-			return Collections.<String>emptySet();
+			return emptySet();
 		}
 		
 		return groupConfigData.words();

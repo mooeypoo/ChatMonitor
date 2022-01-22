@@ -17,10 +17,10 @@ import io.github.mooeypoo.chatmonitor.configs.ConfigurationException;
 import io.github.mooeypoo.chatmonitor.configs.GroupConfigInterface;
 
 public class WordManager {
-	private HashMap<String, String> wordmap = new HashMap<String, String>();
-	private HashMap<String, ArrayList<String>> mapWordsInCommands = new HashMap<String, ArrayList<String>>();
-	private ArrayList<String> allwords = new ArrayList<String>();
-	private ArrayList<String> relevantCommands = new ArrayList<String>();
+	private HashMap<String, String> wordmap = new HashMap<>();
+	private HashMap<String, ArrayList<String>> mapWordsInCommands = new HashMap<>();
+	private ArrayList<String> allwords = new ArrayList<>();
+	private ArrayList<String> relevantCommands = new ArrayList<>();
 	private JavaPlugin plugin;
 	private ConfigManager configManager;
 	
@@ -147,17 +147,12 @@ public class WordManager {
 	 */
 	private void collectCommandMap(String word, Set<String> commandsInGroup) {
 		for (String includedCmd : commandsInGroup) {
-			if (includedCmd == null || includedCmd.trim().isEmpty()) {
+			if (includedCmd == null || includedCmd.isBlank()) {
 				// Skip empty lines
 				continue;
 			}
 			// For each command, get the existing list first
-			ArrayList<String> wordListForThisCommand = this.mapWordsInCommands.get(includedCmd);
-			if (wordListForThisCommand == null) {
-				// Create a list for this command if one doesn't exist
-				wordListForThisCommand = new ArrayList<String>();
-				this.mapWordsInCommands.put(includedCmd, wordListForThisCommand);
-			}
+			ArrayList<String> wordListForThisCommand = mapWordsInCommands.computeIfAbsent(includedCmd, s -> new ArrayList<>());
 			
 			// Add the word into the command map, if the word doesn't already exist in it
 			if (!wordListForThisCommand.contains(word)) {
@@ -186,29 +181,28 @@ public class WordManager {
 		if (group == null) {
 			return null;
 		}
-		GroupConfigInterface config = null;
+
 		try {
-			config = this.configManager.getGroupConfigData(group);
+			GroupConfigInterface config = this.configManager.getGroupConfigData(group);
+
+			if (config == null) {
+				return null;
+			}
+
+			// From the group, get the message and commands
+			return new WordAction(
+					matchedRule,
+					originalWord,
+					config.message(),
+					config.preventSend(),
+					config.broadcast(),
+					config.runCommands(),
+					group
+			);
 		} catch (ConfigurationException e) {
 			this.plugin.getLogger().warning("Aborting generating action. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
 			return null;
 		}
-		
-		if (config == null) {
-			return null;
-		}
-
-		// From the group, get the message and commands
-		return new WordAction(
-			matchedRule,
-			originalWord,
-			config.message(),
-			config.preventSend(),
-			config.broadcast(),
-			config.runCommands(),
-			group
-		);
-		
 	}
 
 	/**

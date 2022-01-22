@@ -8,15 +8,15 @@ public class WordAction {
 	private Set<String> commands;
 	private String message;
 	private String group;
-	private Boolean preventSend;
-	private Boolean broadcast;
+	private boolean preventSend;
+	private boolean broadcast;
 	
 	public WordAction(
 			String matchedRule,
 			String originalWord,
 			String message,
-			Boolean preventSend,
-			Boolean broadcast,
+			boolean preventSend,
+			boolean broadcast,
 			Set<String> commands,
 			String group
 	) {
@@ -49,15 +49,15 @@ public class WordAction {
 		return this.group;
 	}
 	
-	public Boolean isPreventSend() {
+	public boolean isPreventSend() {
 		return this.preventSend;
 	}
 	
-	public Boolean isBroadcast() {
+	public boolean isBroadcast() {
 		return this.broadcast;
 	}
 
-	public Boolean isEmpty() {
+	public boolean isEmpty() {
 		return this.matchedRule == null;
 	}
 }
