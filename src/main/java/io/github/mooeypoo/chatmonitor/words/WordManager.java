@@ -10,18 +10,33 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 import io.github.mooeypoo.chatmonitor.configs.ConfigManager;
 import io.github.mooeypoo.chatmonitor.configs.ConfigurationException;
 import io.github.mooeypoo.chatmonitor.configs.GroupConfigInterface;
 
+@NotThreadSafe // HashMap and ArrayLists are not thread safe and their access isn't protected by synchronization.
 public class WordManager {
 	private HashMap<String, String> wordmap = new HashMap<>();
+
+	// TODO: this Set should probably be a Guava MultiMap, probably an
+	//  	ImmutableSetMultiMap:
+	//  	https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/collect/ImmutableSetMultimap.html
 	private HashMap<String, ArrayList<String>> mapWordsInCommands = new HashMap<>();
+
+	// FIXME: this seems to use the semantics of a Set, not of a List
 	private ArrayList<String> allwords = new ArrayList<>();
+
+	// FIXME: this seems to use the semantics of a Set, not of a List
 	private ArrayList<String> relevantCommands = new ArrayList<>();
-	private JavaPlugin plugin;
+
+	// FIXME: Plugin isn't actually used by this class outside of construction.
+	//  	A reference to Logger should be kept instead.
+	@Nullable private JavaPlugin plugin;
 	private ConfigManager configManager;
 	
 	public WordManager(JavaPlugin plugin) {
@@ -40,6 +55,7 @@ public class WordManager {
 		try {
 			this.configManager = new ConfigManager(filepath, prefix);
 		} catch (ConfigurationException e) {
+			// FIXME: plugin is null in this case
 			this.plugin.getLogger().warning("Initiation aborted for ChatMonitor. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
 			return;
 		}
