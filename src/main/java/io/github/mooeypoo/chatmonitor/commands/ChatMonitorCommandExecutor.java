@@ -1,7 +1,6 @@
 package io.github.mooeypoo.chatmonitor.commands;
 
-import java.awt.Color;
-import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -17,14 +16,15 @@ import io.github.mooeypoo.chatmonitor.words.WordAction;
 
 
 public class ChatMonitorCommandExecutor  implements CommandExecutor {
-	private static String PREFIX = "[ChatMonitor] ";
+	private static final String PREFIX = "[ChatMonitor] ";
 
-	private ChatMonitor plugin;
-	private HashMap<String, String> paramMap = new HashMap<String, String>();
+	private final ChatMonitor plugin;
+	private final Map<String, String> paramMap = Map.of(
+			"reload", "Reload all configuration files and word lists.",
+			"test", "Tests a given string. Responds with whether it is caught by any of the lists.");
 
 	public ChatMonitorCommandExecutor(ChatMonitor plugin) {
 		this.plugin = plugin;
-		this.generateParameterMap();
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class ChatMonitorCommandExecutor  implements CommandExecutor {
 				this.outputToPlayerAndConsole("Please provide the test text: /chatmonitor test [text to test]", sender);
 				return false;
 			}
-			Boolean toPlayer = (sender instanceof Player);
+			boolean toPlayer = (sender instanceof Player);
 		
 			// Get the test text:
 			String testString = StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " ");
@@ -109,15 +109,9 @@ public class ChatMonitorCommandExecutor  implements CommandExecutor {
 		return false;
 	}
 
-	private void generateParameterMap() {
-		this.paramMap.clear();
-		this.paramMap.put("reload", "Reload all configuration files and word lists.");
-		this.paramMap.put("test", "Tests a given string. Responds with whether it is caught by any of the lists.");
-	}
-
 	private void outputHelp(CommandSender sender) {
 		String output = "";
-		Boolean toPlayer = (sender instanceof Player);
+		boolean toPlayer = (sender instanceof Player);
 		
 		output = "Available actions for the /chatmonitor command:";
 		
@@ -130,19 +124,19 @@ public class ChatMonitorCommandExecutor  implements CommandExecutor {
 
 		this.outputToPlayerOrConsole("Commands list:", sender);
 
-		for (String param : this.paramMap.keySet()) {
+		for (Map.Entry<String, String> param : this.paramMap.entrySet()) {
 			output = String.format(
 				toPlayer ? "* " + ChatColor.GREEN + "%s" + ChatColor.WHITE + ": %s" : "* %s: %s",
-				param, this.paramMap.get(param)
+				param.getKey(), param.getValue()
 			);
 			this.outputToPlayerOrConsole(output, sender);
 		}
 		this.outputToPlayerOrConsole("Use the command /chatmonitor [action] to invoke any of the above actions.", sender);
 	}
-	private void output(String out, CommandSender sender, Boolean sendToBoth) {
+	private void output(String out, CommandSender sender, boolean sendToBoth) {
 		String formatColor = ChatColor.BLUE + PREFIX + ChatColor.WHITE + "%s";
 		String formatBlank = PREFIX + "%s";
-		Boolean inGame = sender instanceof Player;
+		boolean inGame = sender instanceof Player;
 		
 		if (sendToBoth || !inGame) {
 			this.plugin.getLogger().info(String.format(formatBlank, out));

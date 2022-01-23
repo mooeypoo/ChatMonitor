@@ -1,15 +1,17 @@
 package io.github.mooeypoo.chatmonitor;
 
-import java.io.File;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
 
 import io.github.mooeypoo.chatmonitor.commands.ChatMonitorCommandExecutor;
 import io.github.mooeypoo.chatmonitor.utils.MessageHandler;
@@ -17,25 +19,9 @@ import io.github.mooeypoo.chatmonitor.utils.UpdateChecker;
 import io.github.mooeypoo.chatmonitor.words.WordAction;
 import io.github.mooeypoo.chatmonitor.words.WordManager;
 
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-
 public class ChatMonitor extends JavaPlugin implements Listener {
 	private WordManager wordmanager;
 	private int spigotResourceId = 87395;
-
-	public ChatMonitor() {
-		super();
-	}
-
-	protected ChatMonitor(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
-		super(loader, description, dataFolder, file);
-	}
 
 	@Override
 	public void onEnable() {
@@ -93,16 +79,14 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 		}
 
 		String msgFromPlayer = event.getMessage();
-		WordAction action = null;
 		try {
-			action = this.wordmanager.processAllWords(msgFromPlayer);
+			WordAction action = this.wordmanager.processAllWords(msgFromPlayer);
+
+			if (action != null && !this.processResponse(action, p, msgFromPlayer)) {
+				event.setCancelled(true);
+			}
 		} catch (Exception e) {
 			this.getLogger().info(e.getMessage());
-			return;
-		}
-
-		if (action != null && !this.processResponse(action, p, msgFromPlayer)) {
-			event.setCancelled(true);
 		}
 	}
 
@@ -120,17 +104,16 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 			return;
 		}
 
-		WordAction action = null;
 		try {
-			action = this.wordmanager.processWordsInCommand(cmdName, event.getMessage());
+			WordAction action = this.wordmanager.processWordsInCommand(cmdName, event.getMessage());
+
+			if (action != null && !this.processResponse(action, event.getPlayer(), event.getMessage())) {
+				event.setCancelled(true);
+			}
 		} catch (Exception e) {
 			this.getLogger().info("Could not process words. Action skipped: " + e.getMessage());
-			return;
 		}
 
-		if (action != null && !this.processResponse(action, event.getPlayer(), event.getMessage())) {
-			event.setCancelled(true);
-		}
 	}
 
 	/**
@@ -143,15 +126,15 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 	 * @param msg    The message sent by the user
 	 * @return Whether or not the event should continue to process or be aborted
 	 */
-	public Boolean processResponse(WordAction action, Player player, String msg) {
+	public boolean processResponse(WordAction action, Player player, String msg) {
 		if (action == null || action.isEmpty()) {
 			return true;
 		}
 
-		Boolean shouldAllowEvent = !action.isPreventSend();
+		boolean shouldAllowEvent = !action.isPreventSend();
 		String response = MessageHandler.replacePlaceholdersFromAction(action.getMessage(), player, action);
 
-		if (!response.trim().isEmpty()) {
+		if (!response.isBlank()) {
 			String colorResponse = ChatColor.translateAlternateColorCodes('&', response);
 
 			if (action.isBroadcast()) {
@@ -178,7 +161,7 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 	 */
 	private void runCommands(Player player, WordAction action) {
 		for (String cmd : action.getCommands()) {
-			if (cmd == null || cmd.trim().isEmpty()) {
+			if (cmd == null || cmd.isBlank()) {
 				continue;
 			}
 
@@ -188,16 +171,15 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 			// Log and execute:
 			this.getLogger().info("Invoking command: " + runnableCommand);
 			try {
-				getServer().getScheduler().callSyncMethod(this, new Callable<Boolean>() {
-					public Boolean call() {
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), runnableCommand);
-						return false;
-					}
+				getServer().getScheduler().callSyncMethod(this, () -> {
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), runnableCommand);
+					return false;
 				}).get();
 			} catch (ExecutionException e) {
 				this.getLogger().warning("ExecutionException for command \"" + cmd + "\"");
 			} catch (InterruptedException e) {
 				this.getLogger().warning("InterruptedException for command \"" + cmd + "\"");
+				Thread.currentThread().interrupt();
 			}
 		}
 	}

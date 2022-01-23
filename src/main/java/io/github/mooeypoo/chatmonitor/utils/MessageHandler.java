@@ -1,18 +1,20 @@
 package io.github.mooeypoo.chatmonitor.utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.entity.Player;
 
 import io.github.mooeypoo.chatmonitor.words.WordAction;
 
 public class MessageHandler {
-	private static List<String> validPlaceholderKeys = Arrays.asList(new String[] {"player", "matchrule", "word"});
-	
-	public MessageHandler() {}
+	private static final List<String> validPlaceholderKeys = List.of("player", "matchrule", "word");
+
+	private MessageHandler() {
+		// Utility class should never be constructed
+	}
 
 	/**
 	 * Replace placeholders in the string with the values given in the map.
@@ -21,23 +23,23 @@ public class MessageHandler {
 	 * @param placeholderMap A map representing the keys and their values
 	 * @return Message with the placeholders replaced
 	 */
-	public static String replacePlaceholders(String message, HashMap<String, String> placeholderMap) {
+	public static String replacePlaceholders(String message, Map<String, String> placeholderMap) {
 		String response = message;
-		for (String key : placeholderMap.keySet()) {
-			if (!validPlaceholderKeys.contains(key.toLowerCase())) {
+		for (Map.Entry<String, String> entry : placeholderMap.entrySet()) {
+			if (!validPlaceholderKeys.contains(entry.getKey().toLowerCase())) {
 				// Sanity check; if the key given isn't in the recognized keys, ignore it
 				continue;
 			}
 			
-			String replacer = "(?i)%" + key + "%"; // Replace case insensitive
-			response = response.replaceAll(replacer, placeholderMap.get(key));
+			String replacer = "(?i)%" + entry.getKey() + "%"; // Replace case insensitive
+			response = response.replaceAll(replacer, entry.getValue());
 		}
 
 		return response;
 	}
 	
 	public static String replacePlaceholdersFromAction(String msgToReplace, Player player, WordAction action) {
-		HashMap<String, String> valueMap = new HashMap<String, String>();
+		Map<String, String> valueMap = new HashMap<>();
 		valueMap.put("player", player.getName());
 		valueMap.put("matchrule", action.getMatchedRule());
 		valueMap.put("word", action.getOriginalWord());
@@ -46,7 +48,7 @@ public class MessageHandler {
 	}
 	
 	public static String createLogMessage(Player player, WordAction action, String originalMessage, String responseMessage) {
-		ArrayList<String> logMessage = new ArrayList<String>();
+		List<String> logMessage = new ArrayList<>();
 		logMessage.add("*MATCH TRIGGERED: " + action.getOriginalWord() + "[group: " + action.getGroup() + "]*");
 		logMessage.add("\n-> Match rule: " + action.getMatchedRule());
 		if (action.isPreventSend()) {

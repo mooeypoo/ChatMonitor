@@ -1,7 +1,6 @@
 package io.github.mooeypoo.chatmonitor.configs;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Path;
 
 import space.arim.dazzleconf.ConfigurationFactory;
@@ -13,8 +12,8 @@ import space.arim.dazzleconf.ext.snakeyaml.SnakeYamlOptions;
 import space.arim.dazzleconf.helper.ConfigurationHelper;
 
 public class ConfigLoader<C> extends ConfigurationHelper<C> {
-	private volatile C configData;
-	private String fileName = null;
+	private C configData;
+	private final String fileName;
 
 	private ConfigLoader(Path configFolder, String fileName, ConfigurationFactory<C> factory) {
 		super(configFolder, fileName, factory);
@@ -30,7 +29,7 @@ public class ConfigLoader<C> extends ConfigurationHelper<C> {
 				new SnakeYamlConfigurationFactory<>(configClass, ConfigurationOptions.defaults(), yamlOptions));
 	}
 
-	public void reloadConfig() throws ConfigurationException {
+	public synchronized void reloadConfig() throws ConfigurationException {
 		try {
 			configData = reloadConfigData();
 		} catch (IOException ex) {
@@ -53,13 +52,12 @@ public class ConfigLoader<C> extends ConfigurationHelper<C> {
 		}
 	}
 
-	public C getConfigData() throws ConfigurationException {
-		C configData = this.configData;
-		if (configData == null) {
+	public synchronized C getConfigData() throws ConfigurationException {
+		if (this.configData == null) {
 			throw new ConfigurationException(
 				this.fileName, "Configuration file was not yet loaded."
 			);
 		}
-		return configData;
+		return this.configData;
 	}
 }
