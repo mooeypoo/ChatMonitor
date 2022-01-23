@@ -21,10 +21,10 @@ jobs:
     steps:
       - name: Clone the repo
         uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
         with:
-          java-version: 1.8
+          java-version: '17'
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v2.7.5
         env:
