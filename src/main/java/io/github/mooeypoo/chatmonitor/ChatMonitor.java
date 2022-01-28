@@ -56,7 +56,7 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 		this.wordmanager = new WordManager(this);
 
 		// Initialize command
-		this.getCommand("chatmonitor").setExecutor(new ChatMonitorCommandExecutor(this));
+		this.getCommand("chatmonitor").setExecutor(new ChatMonitorCommandExecutor(this.getWordManager(), this.getLogger()));
 
 		// Connect events
 		PluginManager pm = this.getServer().getPluginManager();
