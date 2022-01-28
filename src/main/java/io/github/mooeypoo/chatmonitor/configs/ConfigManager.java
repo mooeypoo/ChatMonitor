@@ -7,9 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
+
+@NotThreadSafe
 public class ConfigManager {
-    private Path dataFolder;
-	private String prefix;
+    private final Path dataFolder;
+	private final String prefix;
 	private ConfigLoader<PluginConfigInterface> mainConfig = null;
 	private Map<String, ConfigLoader<GroupConfigInterface>> configs = new HashMap<>();
 
@@ -54,7 +58,8 @@ public class ConfigManager {
 	public Set<String> getGroupNames() {
 		return this.configs.keySet();
 	}
-	
+
+	@Nullable
 	public GroupConfigInterface getGroupConfigData(String groupName) throws ConfigurationException {
 		ConfigLoader<GroupConfigInterface> conf = this.configs.get(groupName);
 		if (conf == null) {

@@ -1,5 +1,6 @@
 package io.github.mooeypoo.chatmonitor;
 
+import java.nio.file.Paths;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -53,7 +54,7 @@ public class ChatMonitor extends JavaPlugin implements Listener {
 		
 		// Initialize word list and config
 		this.getLogger().info("Initializing word lists...");
-		this.wordmanager = new WordManager(this);
+		this.wordmanager = new WordManager(Paths.get(this.getDataFolder().getPath()), "ChatMonitor_wordgroup", this.getLogger());
 
 		// Initialize command
 		this.getCommand("chatmonitor").setExecutor(new ChatMonitorCommandExecutor(this.getWordManager(), this.getLogger()));
