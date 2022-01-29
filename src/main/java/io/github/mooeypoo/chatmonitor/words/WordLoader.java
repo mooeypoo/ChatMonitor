@@ -1,5 +1,6 @@
 package io.github.mooeypoo.chatmonitor.words;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -32,12 +33,10 @@ public class WordLoader {
         SetMultimap<String, String> mapWordsInCommands = MultimapBuilder.hashKeys().hashSetValues().build();
 
         // Go over the groups of words
-        Set<String> groups = configManager.getGroupNames();
-
-        for (String groupName : groups) {
+        for (Map.Entry<String, GroupConfigInterface> entry : configManager.getConfigs()) {
             try {
-                // FIXME: groupConfig can be null
-                GroupConfigInterface groupConfig = configManager.getGroupConfigData(groupName);
+                String groupName = entry.getKey();
+                GroupConfigInterface groupConfig = entry.getValue();
 
                 for (String word : groupConfig.words()) {
                     // Save in the word map, so we can find the group from the matched word
@@ -51,8 +50,8 @@ public class WordLoader {
                             .filter(cmd -> cmd != null && !cmd.isBlank())
                             .forEach(includeCmd -> mapWordsInCommands.get(includeCmd).add(word));
                 }
-            } catch (ConfigurationException e) {
-                logger.warning("Word group loading defaults. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
+            } catch (IllegalArgumentException e) {
+                logger.warning("Word group loading defaults. Error in configuration file");
             }
         }
 

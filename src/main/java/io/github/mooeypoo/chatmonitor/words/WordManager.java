@@ -123,27 +123,22 @@ public class WordManager {
 			return null;
 		}
 
-		try {
-			GroupConfigInterface config = this.configManager.getGroupConfigData(group);
+		GroupConfigInterface config = this.configManager.getGroupConfigData(group);
 
-			if (config == null) {
-				return null;
-			}
-
-			// From the group, get the message and commands
-			return new WordAction(
-					matchedRule,
-					originalWord,
-					config.message(),
-					config.preventSend(),
-					config.broadcast(),
-					config.runCommands(),
-					group
-			);
-		} catch (ConfigurationException e) {
-			logger.warning("Aborting generating action. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
+		if (config == null) {
 			return null;
 		}
+
+		// From the group, get the message and commands
+		return new WordAction(
+				matchedRule,
+				originalWord,
+				config.message(),
+				config.preventSend(),
+				config.broadcast(),
+				config.runCommands(),
+				group
+		);
 	}
 
 	/**
