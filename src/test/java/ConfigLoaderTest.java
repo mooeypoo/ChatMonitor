@@ -1,10 +1,10 @@
-import static org.junit.Assert.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -72,25 +72,24 @@ public class ConfigLoaderTest {
 		this.deleteFile(path);
 	}
 
-	private void makeFileWithContent(Path path, String content) throws IOException {
-		File newFile = null;
+	private void makeFileWithContent(Path path, String content) {
 		try {
 	    	String fullPath = path.normalize().toString();
 	    	System.out.println("PATH --> " + fullPath);
-	        newFile = new File(fullPath);
-	        if (newFile.createNewFile()) {
+			File newFile = new File(fullPath);
+			if (newFile.createNewFile()) {
 	          System.out.println("\n>> File created: " + newFile.getName());
 	        } else {
 	          System.out.println("\n>> File already exists.");
 	        }
+			if (newFile != null) {
+				try (FileWriter writer = new FileWriter(newFile, UTF_8)) {
+					writer.write(content);
+				}
+			}
 		} catch (IOException e) {
 		    System.out.println("An error occurred.");
 		    e.printStackTrace();
-		}
-		if (newFile != null) {
-	        FileWriter writer = new FileWriter(newFile);
-	        writer.write(content);
-	        writer.close();
 		}
 	}
 	

@@ -23,7 +23,7 @@ public class WordAction {
 		this.matchedRule = matchedRule;
 		this.originalWord = originalWord;
 		this.message = message;
-		this.commands = commands;
+		this.commands = Set.copyOf(commands);
 		this.preventSend = preventSend;
 		this.broadcast = broadcast;
 		this.group = group;
