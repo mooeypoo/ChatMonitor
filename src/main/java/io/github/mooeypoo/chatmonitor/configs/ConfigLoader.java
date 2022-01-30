@@ -3,6 +3,9 @@ package io.github.mooeypoo.chatmonitor.configs;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+
 import space.arim.dazzleconf.ConfigurationFactory;
 import space.arim.dazzleconf.ConfigurationOptions;
 import space.arim.dazzleconf.error.ConfigFormatSyntaxException;
@@ -11,6 +14,7 @@ import space.arim.dazzleconf.ext.snakeyaml.SnakeYamlConfigurationFactory;
 import space.arim.dazzleconf.ext.snakeyaml.SnakeYamlOptions;
 import space.arim.dazzleconf.helper.ConfigurationHelper;
 
+@ThreadSafe
 public class ConfigLoader<C> extends ConfigurationHelper<C> {
 	private C configData;
 	private final String fileName;
@@ -25,8 +29,11 @@ public class ConfigLoader<C> extends ConfigurationHelper<C> {
 		SnakeYamlOptions yamlOptions = new SnakeYamlOptions.Builder()
 				.useCommentingWriter(true) // Enables writing YAML comments
 				.build();
-		return new ConfigLoader<>(configFolder, fileName,
-				new SnakeYamlConfigurationFactory<>(configClass, ConfigurationOptions.defaults(), yamlOptions));
+		return new ConfigLoader<>(configFolder,
+				fileName,
+				SnakeYamlConfigurationFactory.create(configClass,
+						ConfigurationOptions.defaults(),
+						yamlOptions));
 	}
 
 	public synchronized void reloadConfig() throws ConfigurationException {
@@ -52,6 +59,7 @@ public class ConfigLoader<C> extends ConfigurationHelper<C> {
 		}
 	}
 
+	@Nonnull
 	public synchronized C getConfigData() throws ConfigurationException {
 		if (this.configData == null) {
 			throw new ConfigurationException(

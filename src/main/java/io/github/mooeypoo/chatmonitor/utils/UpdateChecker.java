@@ -1,5 +1,7 @@
 package io.github.mooeypoo.chatmonitor.utils;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Consumer;
@@ -7,6 +9,7 @@ import org.bukkit.util.Consumer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class UpdateChecker {
@@ -25,7 +28,7 @@ public class UpdateChecker {
             		InputStream inputStream = new URL(
             			"https://api.spigotmc.org/legacy/update.php?resource=" + this.resourceId
             		).openStream();
-            		Scanner scanner = new Scanner(inputStream)
+            		Scanner scanner = new Scanner(inputStream, UTF_8)
             ) {
                 if (scanner.hasNext()) {
                     consumer.accept(scanner.next());

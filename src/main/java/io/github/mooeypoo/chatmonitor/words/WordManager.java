@@ -1,71 +1,64 @@
 package io.github.mooeypoo.chatmonitor.words;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
+
+import com.google.common.collect.ImmutableSetMultimap;
+import com.google.common.collect.SetMultimap;
 
 import io.github.mooeypoo.chatmonitor.configs.ConfigManager;
 import io.github.mooeypoo.chatmonitor.configs.ConfigurationException;
 import io.github.mooeypoo.chatmonitor.configs.GroupConfigInterface;
 
+@NotThreadSafe
 public class WordManager {
-	private HashMap<String, String> wordmap = new HashMap<>();
-	private HashMap<String, ArrayList<String>> mapWordsInCommands = new HashMap<>();
-	private ArrayList<String> allwords = new ArrayList<>();
-	private ArrayList<String> relevantCommands = new ArrayList<>();
-	private JavaPlugin plugin;
+	private final Logger logger;
+	private WordLoader wordLoader;
 	private ConfigManager configManager;
-	
-	public WordManager(JavaPlugin plugin) {
-		this.plugin = plugin;
-		try {
-			this.configManager = new ConfigManager(Paths.get(this.plugin.getDataFolder().getPath()), "ChatMonitor_wordgroup");
-		} catch (ConfigurationException e) {
-			this.plugin.getLogger().warning("Initiation aborted for ChatMonitor. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
-			return;
-		}
-		this.collectWords();
-	}
-	
+
+	@Nonnull private SetMultimap<String, String> mapWordsInCommands = ImmutableSetMultimap.of();
+	@Nonnull private Map<String, String> wordMap = Map.of();
+
 	// Used for testing
-	public WordManager(Path filepath, String prefix) {
+	public WordManager(Path dataFolder, String prefix, Logger logger) {
+		this.logger = logger;
 		try {
-			this.configManager = new ConfigManager(filepath, prefix);
+			configManager = new ConfigManager(dataFolder, prefix);
+			wordLoader = new WordLoader(configManager, logger);
+			setWords(wordLoader.collectWords());
 		} catch (ConfigurationException e) {
-			this.plugin.getLogger().warning("Initiation aborted for ChatMonitor. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
-			return;
+			this.logger.warning("Initiation aborted for ChatMonitor. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
 		}
-		this.collectWords();
 	}
+
 	/**
 	 * Reload the lists and re-process the groups from the config files.
 	 */
 	public void reload() {
-		// Reset lists
-		this.wordmap.clear();
-		this.allwords.clear();
-		this.mapWordsInCommands.clear();
-		this.relevantCommands.clear();
-		
-		// Refresh all configs 
 		try {
+			// Refresh all configs
 			this.configManager.reload();
+			// Redo word collection
+			setWords(wordLoader.collectWords());
 		} catch (ConfigurationException e) {
-			this.plugin.getLogger().warning("Reload loading default config. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
+			logger.warning("Reload loading default config. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
 		}
-
-		// Redo word collection
-		this.collectWords();
 	}
-	
+
+	private void setWords(@Nonnull Words words) {
+		this.mapWordsInCommands = words.mapWordsInCommands();
+		this.wordMap = words.wordmap();
+	}
+
 	/**
 	 * Process the given message to see if it triggers a matching word
 	 * then grab the details of the word.
@@ -74,8 +67,9 @@ public class WordManager {
 	 * @return Details of the matched word from any of the groups, or null if none was matched.
 	 * @throws Exception 
 	 */
+	@Nullable
 	public WordAction processAllWords(String chatMessage) throws Exception {
-		String[] matched = this.getMatchedWord(chatMessage, this.allwords);
+		String[] matched = this.getMatchedWord(chatMessage, this.wordMap.keySet());
 
 		if (matched == null) {
 			return null;
@@ -93,12 +87,13 @@ public class WordManager {
 	 * @return Details of the matched word from any of the groups, or null if none was matched.
 	 * @throws Exception 
 	 */
+	@Nullable
 	public WordAction processWordsInCommand(String commandName, String fullmessage) throws Exception {
 		if (!this.mapWordsInCommands.containsKey(commandName)) {	
 			return null;
 		}
 
-		ArrayList<String> wordListForThisCommand = this.mapWordsInCommands.get(commandName);
+		Set<String> wordListForThisCommand = this.mapWordsInCommands.get(commandName);
 		
 		String[] matched = this.getMatchedWord(fullmessage, wordListForThisCommand);
 		if (matched == null) {
@@ -106,61 +101,6 @@ public class WordManager {
 		}
 
 		return this.getWordAction(matched);
-	}
-	
-	/**
-	 * Initialize the lists, collect all words and groups from the config files.
-	 */
-	private void collectWords() {
-		// Go over the groups of words
-		Set<String> groups = this.configManager.getGroupNames();
-
-		for (String groupName : groups) {
-			GroupConfigInterface groupConfig = null;
-			try {
-				groupConfig = this.configManager.getGroupConfigData(groupName);
-			} catch (ConfigurationException e) {
-				this.plugin.getLogger().warning("Word group loading defaults. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
-			}
-			// Collect all words from the config group
-			this.allwords.addAll(groupConfig.words());
-
-			for (String word : groupConfig.words()) {
-				// Save in the word map so we can find the group from the matched word
-				this.wordmap.put(word, groupName);
-				
-				// Check if there are commands that this word should be tested against
-				// and add those to the commands map
-				this.collectCommandMap(word, groupConfig.includeCommands());
-			}
-	
-		}
-	}
-	
-	/**
-	 * Collect the relevant commands per word given, based on the group configuration
-	 * Create a map where command names are keys, and the values are a list of all words
-	 * that are included in the groups that include this command.
-	 *
-	 * @param word Given word match
-	 * @param commandsInGroup A set of the commands in the group
-	 */
-	private void collectCommandMap(String word, Set<String> commandsInGroup) {
-		for (String includedCmd : commandsInGroup) {
-			if (includedCmd == null || includedCmd.isBlank()) {
-				// Skip empty lines
-				continue;
-			}
-			// For each command, get the existing list first
-			ArrayList<String> wordListForThisCommand = mapWordsInCommands.computeIfAbsent(includedCmd, s -> new ArrayList<>());
-			
-			// Add the word into the command map, if the word doesn't already exist in it
-			if (!wordListForThisCommand.contains(word)) {
-				wordListForThisCommand.add(word);
-			}
-
-		}
-
 	}
 
 	/**
@@ -170,6 +110,7 @@ public class WordManager {
 	 * @param matched An array 
 	 * @return     Details about the matched word 
 	 */
+	@Nullable
 	private WordAction getWordAction(String[] matched) {
 		if (matched.length < 2) {
 			return null;
@@ -177,32 +118,27 @@ public class WordManager {
 		String matchedRule = matched[0];
 		String originalWord = matched[1];
 		// Find the group this word is in
-		String group = this.wordmap.get(matchedRule);
+		String group = this.wordMap.get(matchedRule);
 		if (group == null) {
 			return null;
 		}
 
-		try {
-			GroupConfigInterface config = this.configManager.getGroupConfigData(group);
+		GroupConfigInterface config = this.configManager.getGroupConfigData(group);
 
-			if (config == null) {
-				return null;
-			}
-
-			// From the group, get the message and commands
-			return new WordAction(
-					matchedRule,
-					originalWord,
-					config.message(),
-					config.preventSend(),
-					config.broadcast(),
-					config.runCommands(),
-					group
-			);
-		} catch (ConfigurationException e) {
-			this.plugin.getLogger().warning("Aborting generating action. Error in configuration file '" + e.getConfigFileName() + "': " + e.getMessage());
+		if (config == null) {
 			return null;
 		}
+
+		// From the group, get the message and commands
+		return new WordAction(
+				matchedRule,
+				originalWord,
+				config.message(),
+				config.preventSend(),
+				config.broadcast(),
+				config.runCommands(),
+				group
+		);
 	}
 
 	/**
@@ -213,22 +149,19 @@ public class WordManager {
 	 * @param wordList A word list to test against
 	 * @return An array that contains the matching term and original word that was matched,
 	 *  or null if none was matched.
-	 * @throws Exception 
 	 */
-	private String[] getMatchedWord(String givenString, List<String> wordList) throws Exception {
-    	Matcher matcher;
-		if (wordList == null || wordList.isEmpty()) {
-			return null;
-		}
-		
-		// Transform to owercase for the match test
+	@Nullable
+	private String[] getMatchedWord(String givenString, @Nonnull Set<String> wordList) throws Exception {
+		// Transform to lowercase for the match test
 		String testString = givenString.toLowerCase();
-    	// Check if the string has any of the words in the wordlist
+
+		// Check if the string has any of the words in the wordlist
 		for (String rule : wordList) {
 			try {
+				// FIXME: compiling patterns is somewhat expensive and should be done only once, when loading the configuration
 	    		Pattern pattern = Pattern.compile(rule);
-	    		matcher = pattern.matcher(testString);
-	    		if (matcher.find()) {
+				Matcher matcher = pattern.matcher(testString);
+				if (matcher.find()) {
 	    			return new String[] { rule, matcher.group() };
 	    		}
 			} catch (PatternSyntaxException e) {
@@ -248,6 +181,7 @@ public class WordManager {
 	 *
 	 * @return List of commands that have words that may match in a string
 	 */
+	@Nonnull
 	public Set<String> getRelevantCommands() {
 		return this.mapWordsInCommands.keySet();
 	}
